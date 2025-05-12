@@ -1,0 +1,32 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend for chat-app",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/index.ts",
+    "prepare": "husky",
+    "lint": "eslint './src --fix --max-warnings=0",
+    "format": "prettier ./src --write"
+  },
+  "author": "Michał Galiński",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.15.17",
+    "@typescript-eslint/eslint-plugin": "^8.32.1",
+    "@typescript-eslint/parser": "^8.32.1",
+    "eslint": "^9.26.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.0",
+    "husky": "^9.1.7",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.5.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
