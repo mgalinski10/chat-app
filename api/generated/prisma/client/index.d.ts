@@ -975,6 +975,8 @@ export namespace Prisma {
     id: number | null;
     email: string | null;
     password: string | null;
+    firstName: string | null;
+    lastName: string | null;
     createdAt: Date | null;
   };
 
@@ -982,6 +984,8 @@ export namespace Prisma {
     id: number | null;
     email: string | null;
     password: string | null;
+    firstName: string | null;
+    lastName: string | null;
     createdAt: Date | null;
   };
 
@@ -989,6 +993,8 @@ export namespace Prisma {
     id: number;
     email: number;
     password: number;
+    firstName: number;
+    lastName: number;
     createdAt: number;
     _all: number;
   };
@@ -1005,6 +1011,8 @@ export namespace Prisma {
     id?: true;
     email?: true;
     password?: true;
+    firstName?: true;
+    lastName?: true;
     createdAt?: true;
   };
 
@@ -1012,6 +1020,8 @@ export namespace Prisma {
     id?: true;
     email?: true;
     password?: true;
+    firstName?: true;
+    lastName?: true;
     createdAt?: true;
   };
 
@@ -1019,6 +1029,8 @@ export namespace Prisma {
     id?: true;
     email?: true;
     password?: true;
+    firstName?: true;
+    lastName?: true;
     createdAt?: true;
     _all?: true;
   };
@@ -1116,6 +1128,8 @@ export namespace Prisma {
     id: number;
     email: string;
     password: string;
+    firstName: string;
+    lastName: string;
     createdAt: Date;
     _count: UserCountAggregateOutputType | null;
     _avg: UserAvgAggregateOutputType | null;
@@ -1143,6 +1157,8 @@ export namespace Prisma {
       id?: boolean;
       email?: boolean;
       password?: boolean;
+      firstName?: boolean;
+      lastName?: boolean;
       createdAt?: boolean;
     },
     ExtArgs['result']['user']
@@ -1155,6 +1171,8 @@ export namespace Prisma {
       id?: boolean;
       email?: boolean;
       password?: boolean;
+      firstName?: boolean;
+      lastName?: boolean;
       createdAt?: boolean;
     },
     ExtArgs['result']['user']
@@ -1167,6 +1185,8 @@ export namespace Prisma {
       id?: boolean;
       email?: boolean;
       password?: boolean;
+      firstName?: boolean;
+      lastName?: boolean;
       createdAt?: boolean;
     },
     ExtArgs['result']['user']
@@ -1176,13 +1196,15 @@ export namespace Prisma {
     id?: boolean;
     email?: boolean;
     password?: boolean;
+    firstName?: boolean;
+    lastName?: boolean;
     createdAt?: boolean;
   };
 
   export type UserOmit<
     ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs,
   > = $Extensions.GetOmit<
-    'id' | 'email' | 'password' | 'createdAt',
+    'id' | 'email' | 'password' | 'firstName' | 'lastName' | 'createdAt',
     ExtArgs['result']['user']
   >;
 
@@ -1196,6 +1218,8 @@ export namespace Prisma {
         id: number;
         email: string;
         password: string;
+        firstName: string;
+        lastName: string;
         createdAt: Date;
       },
       ExtArgs['result']['user']
@@ -1785,6 +1809,8 @@ export namespace Prisma {
     readonly id: FieldRef<'User', 'Int'>;
     readonly email: FieldRef<'User', 'String'>;
     readonly password: FieldRef<'User', 'String'>;
+    readonly firstName: FieldRef<'User', 'String'>;
+    readonly lastName: FieldRef<'User', 'String'>;
     readonly createdAt: FieldRef<'User', 'DateTime'>;
   }
 
@@ -2198,6 +2224,8 @@ export namespace Prisma {
     id: 'id';
     email: 'email';
     password: 'password';
+    firstName: 'firstName';
+    lastName: 'lastName';
     createdAt: 'createdAt';
   };
 
@@ -2297,6 +2325,8 @@ export namespace Prisma {
     id?: IntFilter<'User'> | number;
     email?: StringFilter<'User'> | string;
     password?: StringFilter<'User'> | string;
+    firstName?: StringFilter<'User'> | string;
+    lastName?: StringFilter<'User'> | string;
     createdAt?: DateTimeFilter<'User'> | Date | string;
   };
 
@@ -2304,6 +2334,8 @@ export namespace Prisma {
     id?: SortOrder;
     email?: SortOrder;
     password?: SortOrder;
+    firstName?: SortOrder;
+    lastName?: SortOrder;
     createdAt?: SortOrder;
   };
 
@@ -2315,6 +2347,8 @@ export namespace Prisma {
       OR?: UserWhereInput[];
       NOT?: UserWhereInput | UserWhereInput[];
       password?: StringFilter<'User'> | string;
+      firstName?: StringFilter<'User'> | string;
+      lastName?: StringFilter<'User'> | string;
       createdAt?: DateTimeFilter<'User'> | Date | string;
     },
     'id' | 'email'
@@ -2324,6 +2358,8 @@ export namespace Prisma {
     id?: SortOrder;
     email?: SortOrder;
     password?: SortOrder;
+    firstName?: SortOrder;
+    lastName?: SortOrder;
     createdAt?: SortOrder;
     _count?: UserCountOrderByAggregateInput;
     _avg?: UserAvgOrderByAggregateInput;
@@ -2343,12 +2379,16 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<'User'> | number;
     email?: StringWithAggregatesFilter<'User'> | string;
     password?: StringWithAggregatesFilter<'User'> | string;
+    firstName?: StringWithAggregatesFilter<'User'> | string;
+    lastName?: StringWithAggregatesFilter<'User'> | string;
     createdAt?: DateTimeWithAggregatesFilter<'User'> | Date | string;
   };
 
   export type UserCreateInput = {
     email: string;
     password: string;
+    firstName: string;
+    lastName: string;
     createdAt?: Date | string;
   };
 
@@ -2356,12 +2396,16 @@ export namespace Prisma {
     id?: number;
     email: string;
     password: string;
+    firstName: string;
+    lastName: string;
     createdAt?: Date | string;
   };
 
   export type UserUpdateInput = {
     email?: StringFieldUpdateOperationsInput | string;
     password?: StringFieldUpdateOperationsInput | string;
+    firstName?: StringFieldUpdateOperationsInput | string;
+    lastName?: StringFieldUpdateOperationsInput | string;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
   };
 
@@ -2369,6 +2413,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number;
     email?: StringFieldUpdateOperationsInput | string;
     password?: StringFieldUpdateOperationsInput | string;
+    firstName?: StringFieldUpdateOperationsInput | string;
+    lastName?: StringFieldUpdateOperationsInput | string;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
   };
 
@@ -2376,12 +2422,16 @@ export namespace Prisma {
     id?: number;
     email: string;
     password: string;
+    firstName: string;
+    lastName: string;
     createdAt?: Date | string;
   };
 
   export type UserUpdateManyMutationInput = {
     email?: StringFieldUpdateOperationsInput | string;
     password?: StringFieldUpdateOperationsInput | string;
+    firstName?: StringFieldUpdateOperationsInput | string;
+    lastName?: StringFieldUpdateOperationsInput | string;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
   };
 
@@ -2389,6 +2439,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number;
     email?: StringFieldUpdateOperationsInput | string;
     password?: StringFieldUpdateOperationsInput | string;
+    firstName?: StringFieldUpdateOperationsInput | string;
+    lastName?: StringFieldUpdateOperationsInput | string;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
   };
 
@@ -2433,6 +2485,8 @@ export namespace Prisma {
     id?: SortOrder;
     email?: SortOrder;
     password?: SortOrder;
+    firstName?: SortOrder;
+    lastName?: SortOrder;
     createdAt?: SortOrder;
   };
 
@@ -2444,6 +2498,8 @@ export namespace Prisma {
     id?: SortOrder;
     email?: SortOrder;
     password?: SortOrder;
+    firstName?: SortOrder;
+    lastName?: SortOrder;
     createdAt?: SortOrder;
   };
 
@@ -2451,6 +2507,8 @@ export namespace Prisma {
     id?: SortOrder;
     email?: SortOrder;
     password?: SortOrder;
+    firstName?: SortOrder;
+    lastName?: SortOrder;
     createdAt?: SortOrder;
   };
 
