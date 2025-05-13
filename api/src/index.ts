@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
-import express, { Request, Response } from 'express';
+import express from 'express';
+import authRoutes from './routes/authRoutes';
 
 dotenv.config();
 
@@ -8,9 +9,7 @@ const PORT = process.env.API_PORT || 5000;
 
 app.use(express.json());
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello, world!');
-});
+app.use('/auth', authRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

@@ -139,7 +139,7 @@ const config = {
     isCustomOutput: true,
   },
   relativeEnvPaths: {
-    rootEnvPath: '../../../.env',
+    rootEnvPath: null,
     schemaEnvPath: '../../../.env',
   },
   relativePath: '../../../prisma',
@@ -147,12 +147,12 @@ const config = {
   engineVersion: '3cff47a7f5d65c3ea74883f1d736e41d68ce91ed',
   datasourceNames: ['db'],
   activeProvider: 'postgresql',
+  postinstall: false,
   inlineDatasources: {
     db: {
       url: {
         fromEnvVar: 'DATABASE_URL',
-        value:
-          'postgresql://postgres:password@localhost:5432/chatapp?schema=public',
+        value: null,
       },
     },
   },
