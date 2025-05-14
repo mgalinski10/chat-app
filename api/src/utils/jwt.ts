@@ -1,15 +1,11 @@
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 
-if (!JWT_SECRET) {
-  throw new Error('Missing JWT_SECRET in environment');
+if (!ACCESS_TOKEN_SECRET) {
+  throw new Error('Missing ACCESS_TOKEN_SECRET in environment');
 }
 
-export const generateToken = (userId: number) => {
-  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: '1h' });
-};
-
-export const verifyToken = (token: string) => {
-  return jwt.verify(token, JWT_SECRET);
+export const generateAccessToken = (userId: number) => {
+  return jwt.sign({ userId }, ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
 };

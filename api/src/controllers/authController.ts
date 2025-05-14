@@ -5,7 +5,16 @@ export const register = async (req: Request, res: Response) => {
   const { email, password, firstName, lastName } = req.body;
   try {
     const token = await registerUser(email, password, firstName, lastName);
-    res.status(201).json({ token });
+
+    res
+      .cookie('accessToken', token, {
+        httpOnly: true,
+        sameSite: 'strict',
+        maxAge: 1000 * 60 * 15,
+      })
+      .status(201)
+      .json();
+
     // #TODO provide type for error if it's possible
     // eslint-disable-next-line
   } catch (error: any) {
@@ -17,7 +26,16 @@ export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
     const token = await loginUser(email, password);
-    res.status(200).json({ token });
+
+    res
+      .cookie('accessToken', token, {
+        httpOnly: true,
+        sameSite: 'strict',
+        maxAge: 1000 * 5 * 15,
+      })
+      .status(200)
+      .json();
+
     // #TODO provide type for error if it's possible
     // eslint-disable-next-line
   } catch (error: any) {
