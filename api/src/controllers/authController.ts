@@ -34,11 +34,21 @@ export const login = async (req: Request, res: Response) => {
         maxAge: 1000 * 5 * 15,
       })
       .status(200)
-      .json();
+      .json({ message: 'Logged in successfuly.' });
 
     // #TODO provide type for error if it's possible
     // eslint-disable-next-line
   } catch (error: any) {
     res.status(401).json({ error: error.message });
   }
+};
+
+export const logout = async (req: Request, res: Response) => {
+  res
+    .clearCookie('accessToken', {
+      httpOnly: true,
+      sameSite: 'strict',
+    })
+    .status(200)
+    .json({ message: 'Logged out successfuly.' });
 };
