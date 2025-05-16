@@ -1,21 +1,66 @@
 'use client';
 
+import axios from 'axios';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { FieldValues, useForm } from 'react-hook-form';
 
 export default function AuthFormRegister() {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setError,
     reset,
   } = useForm();
 
   const onSubmit = async (data: FieldValues) => {
-    // TODO: submit to api
-    console.debug(data);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    reset();
+    const { firstName, lastName, email, password } = data;
+    try {
+      const res = await axios.post(
+        'http://localhost:5000/auth/register',
+        {
+          firstName,
+          lastName,
+          email,
+          password,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true,
+        },
+      );
+
+      if (res.status === 201) {
+        reset();
+        // TODO: Meaby short form to get more information about user?
+        router.push('/messages');
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 400) {
+          setError('root', {
+            type: 'server',
+            // TODO: HAX, better error handling example: (err) => return <p>err.message<p>
+            message: `${error.response.data.errors[0].message}`,
+          });
+        } else if (error.response?.status === 409) {
+          setError('root', {
+            type: 'server',
+            message: `User already exists`,
+          });
+        }
+      } else {
+        setError('root', {
+          type: 'server',
+          message: 'Something went wrong. Try again later.',
+        });
+      }
+    }
   };
 
   return (
@@ -65,7 +110,7 @@ export default function AuthFormRegister() {
               {...register('email', {
                 required: 'Email is required',
               })}
-              type="email"
+              // type="email"
               className="w-full px-4 py-2 border border-blue-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="john@example.com"
             />
@@ -100,6 +145,9 @@ export default function AuthFormRegister() {
           >
             Sign up
           </button>
+          {errors.root && (
+            <p className="text-red-500 text-center mt-1">{`${errors.root.message}`}</p>
+          )}
           <p className="text-center text-sm text-gray-600">
             Already have an account?{' '}
             <Link className="text-blue-600 hover:underline" href={'/login'}>
