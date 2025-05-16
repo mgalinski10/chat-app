@@ -7,5 +7,5 @@ if (!ACCESS_TOKEN_SECRET) {
 }
 
 export const generateAccessToken = (userId: number) => {
-  return jwt.sign({ userId }, ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+  return jwt.sign({ userId }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
 };

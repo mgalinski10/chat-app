@@ -31,7 +31,7 @@ export const login = async (req: Request, res: Response) => {
       .cookie('accessToken', token, {
         httpOnly: true,
         sameSite: 'strict',
-        maxAge: 1000 * 5 * 15,
+        maxAge: 1000 * 60 * 15,
       })
       .status(200)
       .json({ message: 'Logged in successfuly.' });
