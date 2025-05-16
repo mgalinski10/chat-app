@@ -1,5 +1,9 @@
 import dotenv from 'dotenv';
-import express, { Request, Response } from 'express';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import express from 'express';
+import authRoutes from './routes/authRoutes';
+import userRoutes from './routes/userRoutes';
 
 dotenv.config();
 
@@ -7,10 +11,16 @@ const app = express();
 const PORT = process.env.API_PORT || 5000;
 
 app.use(express.json());
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  }),
+);
+app.use(cookieParser());
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello, world!');
-});
+app.use('/auth', authRoutes);
+app.use('/user', userRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
