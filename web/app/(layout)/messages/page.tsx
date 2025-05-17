@@ -11,7 +11,7 @@ const MessagesPage = () => {
     return <Spinner />;
   }
 
-  return <div>Welcome, {user.firstName}</div>;
+  return <div className="">Welcome, {user.firstName}! It's messages page.</div>;
 };
 
 export default MessagesPage;

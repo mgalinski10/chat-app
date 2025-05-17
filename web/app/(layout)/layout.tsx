@@ -1,4 +1,5 @@
 import UserProvider from '@/contexts/UserContext';
+import Sidebar from '@/components/Sidebar/Sidebar';
 
 export default function DashboardLayout({
   children,
@@ -7,7 +8,10 @@ export default function DashboardLayout({
 }) {
   return (
     <UserProvider>
-      <div className="flex min-h-screen">{children}</div>
+      <div className="flex min-h-screen bg-blue-900 p-5">
+        <Sidebar />
+        {children}
+      </div>
     </UserProvider>
   );
 }
