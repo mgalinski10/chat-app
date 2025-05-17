@@ -8,7 +8,10 @@ export default function DashboardLayout({
 }) {
   return (
     <UserProvider>
-      <div className="flex min-h-screen bg-blue-900 p-5">
+      <div
+        className="flex h-screen
+       bg-blue-900 p-5"
+      >
         <Sidebar />
         {children}
       </div>
