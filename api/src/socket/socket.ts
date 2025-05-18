@@ -1,0 +1,52 @@
+import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
+import { Server } from 'socket.io';
+import { Server as HTTPServer } from 'http';
+import { testSocketHandlers } from './handlers';
+import { getAccessToken } from '../utils/getAccessToken';
+
+dotenv.config();
+
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
+
+if (!ACCESS_TOKEN_SECRET) {
+  throw new Error('ACCESS_TOKEN_SECRET is missing');
+}
+
+export const setupSocket = (server: HTTPServer) => {
+  const io = new Server(server, {
+    cors: {
+      origin: 'http://localhost:3000',
+      credentials: true,
+    },
+  });
+
+  io.use((socket, next) => {
+    const cookie = socket.handshake.headers.cookie;
+
+    if (!cookie) {
+      return next(new Error('No cookie provided'));
+    }
+
+    const token = getAccessToken(cookie);
+
+    if (!token) return next(new Error('No token provided'));
+
+    try {
+      const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET);
+      socket.data.user = decoded;
+      next();
+    } catch (err) {
+      console.log('JWT error:', err);
+      return next(new Error('Invalid token'));
+    }
+  });
+
+  io.on('connection', (socket) => {
+    console.log('🟢 Socket connected:', socket.id, 'User:', socket.data.user);
+
+    testSocketHandlers(socket, io);
+  });
+
+  return io;
+};

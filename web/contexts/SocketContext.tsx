@@ -2,7 +2,6 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
-import Cookies from 'js-cookie';
 
 interface SocketContextType {
   socket: Socket | null;
@@ -16,12 +15,8 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    const token = Cookies.get('accesToken');
-
     const socketInstance = io('http://localhost:5000', {
-      auth: {
-        token,
-      },
+      withCredentials: true,
     });
 
     setSocket(socketInstance);
