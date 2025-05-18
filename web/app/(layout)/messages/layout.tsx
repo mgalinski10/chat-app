@@ -1,6 +1,8 @@
 'use client';
 
+import { useEffect } from 'react';
 import Spinner from '@/components/Spinner/Spinner';
+import { useSocket } from '@/contexts/SocketContext';
 import { useUser } from '@/hooks/useUser';
 import React from 'react';
 import Card from '@/components/Card/Card';
@@ -13,6 +15,22 @@ interface MessagesLayoutProps {
 
 const MessagesLayout: React.FC<MessagesLayoutProps> = ({ children }) => {
   const { user } = useUser();
+
+  const socket = useSocket();
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on('connect', () => {
+      console.log('🟢 Socket connected:', socket.id);
+    });
+
+    socket.emit('test', 'Testowa wiadomość');
+
+    return () => {
+      socket.off('sendMessage');
+    };
+  }, [socket]);
 
   if (!user) return <Spinner />;
 
