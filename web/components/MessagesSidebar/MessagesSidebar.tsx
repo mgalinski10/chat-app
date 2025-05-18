@@ -1,0 +1,82 @@
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
+const mock = [
+  {
+    id: '1',
+    firstName: 'Anna',
+    lastName: 'Kowalska',
+    avatar: 'https://i.pravatar.cc/150?u=anna.kowalska',
+    url: '/messages/1',
+  },
+  {
+    id: '2',
+    firstName: 'John',
+    lastName: 'Smith',
+    avatar: 'https://i.pravatar.cc/150?u=john.smith',
+    url: '/messages/2',
+  },
+  {
+    id: '3',
+    firstName: 'Michał',
+    lastName: 'Galiński',
+    avatar: 'https://i.pravatar.cc/150?u=michal.galinski',
+    url: '/messages/3',
+  },
+];
+
+type MessageSideBarItem = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  avatar: string;
+  url: string;
+};
+
+const MessagesSidebarItem = ({ item }: { item: MessageSideBarItem }) => {
+  const pathname = usePathname();
+  const isActive = pathname.startsWith(item.url);
+
+  return (
+    <li
+      className={`flex items-center space-x-4 p-3 cursor-pointer border-l-4 transition-colors duration-300
+        ${isActive ? 'border-gray-500' : 'border-transparent hover:border-gray-500'}`}
+    >
+      <Link href={item.url} className="flex items-center space-x-4 w-full">
+        <img
+          src={item.avatar}
+          className="w-12 h-12 rounded-full object-cover"
+        />
+        <div className="flex flex-col overflow-hidden">
+          <span className="font-medium truncate">
+            {item.firstName} {item.lastName}
+          </span>
+          <span className="text-sm text-gray-400 truncate">4 hours ago</span>
+        </div>
+      </Link>
+    </li>
+  );
+};
+
+const MessagesSidebar = () => {
+  // TODO: Add Link and proper routing: Click conversation -> change url on smth like: /messages/12345-1233-123123 -> display conversation chat with that id
+  // so meaby useProvider or smth to fetch conversation from here
+
+  return (
+    <aside
+      className="h-full bg-white rounded-xl
+     p-4"
+    >
+      <h2 className="text-lg font-semibold mb-4">Chats</h2>
+      <ul className="space-y-2">
+        {mock.map((item) => {
+          return <MessagesSidebarItem key={item.id} item={item} />;
+        })}
+      </ul>
+    </aside>
+  );
+};
+
+export default MessagesSidebar;
