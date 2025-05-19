@@ -6,6 +6,7 @@ import { setupSocket } from './socket/socket';
 import express from 'express';
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
+import contactsRoutes from './routes/contactsRoutes';
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use(cookieParser());
 
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
+app.use('/contacts', contactsRoutes);
 
 server.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

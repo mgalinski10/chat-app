@@ -1,0 +1,216 @@
+import { Request, Response } from 'express';
+import prisma from '../utils/prisma-client';
+
+export enum RequestStatus {
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  REJECTED = 'REJECTED',
+}
+
+export const sendContactRequest = async (req: Request, res: Response) => {
+  //   @ts-expect-error from middleware
+  const senderId = req.user.userId;
+  const receiverId = req.body.receiverId;
+
+  //   console.debug(senderId, receiverId);
+  if (senderId === receiverId) {
+    res.status(400).json("You can't add yourself.");
+    return;
+  }
+
+  try {
+    const existing = await prisma.friendRequest.findFirst({
+      where: {
+        OR: [
+          { senderId: senderId, receiverId: receiverId },
+          { senderId: receiverId, receiverId: senderId },
+        ],
+      },
+    });
+
+    if (existing) {
+      res.status(400).json({ message: 'Request is already pending' });
+      return;
+    }
+
+    await prisma.friendRequest.create({
+      data: {
+        senderId,
+        receiverId,
+      },
+    });
+
+    res.status(200).json({ message: 'Sent friend request' });
+    return;
+  } catch (error) {
+    console.error(`Error while friend request: ${error}`);
+    res.status(500).json('Something went wrong');
+  }
+};
+
+export const acceptContactRequest = async (req: Request, res: Response) => {
+  // @ts-expect-error from middleware
+  const receiverId = req.user.userId;
+  const senderId = req.body.senderId;
+  // @ts-expect-error from middleware
+  console.debug(`Receiver: ${req.user.userId}, Sender: ${req.body.senderId}`);
+  if (!senderId) {
+    res
+      .status(400)
+      .json({ message: `Missing senderId in request body ${senderId}` });
+    return;
+  }
+
+  try {
+    const request = await prisma.friendRequest.findUnique({
+      where: {
+        senderId_receiverId: {
+          senderId,
+          receiverId,
+        },
+      },
+    });
+
+    if (!request) {
+      res.status(404).json({ message: 'Friend request not found' });
+      return;
+    }
+
+    if (request.status === RequestStatus.ACCEPTED) {
+      res.status(400).json({ message: 'Request already accepted' });
+      return;
+    }
+
+    await prisma.$transaction([
+      prisma.friend.create({
+        data: {
+          userId: senderId,
+          friendId: receiverId,
+        },
+      }),
+      prisma.friend.create({
+        data: {
+          userId: receiverId,
+          friendId: senderId,
+        },
+      }),
+      prisma.friendRequest.update({
+        where: {
+          senderId_receiverId: {
+            senderId,
+            receiverId,
+          },
+        },
+        data: {
+          status: RequestStatus.ACCEPTED,
+        },
+      }),
+    ]);
+
+    res.status(200).json({ message: 'Friend request accepted' });
+    return;
+  } catch (error) {
+    console.error('Error accepting friend request:', error);
+    res.status(500).json({ message: 'Something went wrong' });
+  }
+};
+
+export const declineContactRequest = async (req: Request, res: Response) => {
+  // @ts-expect-error from middleware
+  const receiverId = req.user.userId;
+  const { senderId } = req.body;
+
+  if (!senderId) {
+    res.status(400).json({ message: 'Missing senderId' });
+    return;
+  }
+
+  try {
+    const existingRequest = await prisma.friendRequest.findUnique({
+      where: {
+        senderId_receiverId: {
+          senderId,
+          receiverId,
+        },
+      },
+    });
+
+    if (!existingRequest) {
+      res.status(404).json({ message: 'Friend request not found' });
+      return;
+    }
+
+    const updatedRequest = await prisma.friendRequest.update({
+      where: {
+        senderId_receiverId: {
+          senderId,
+          receiverId,
+        },
+      },
+      data: {
+        status: RequestStatus.REJECTED,
+      },
+    });
+
+    res
+      .status(200)
+      .json({ message: 'Friend request declined', updatedRequest });
+    return;
+  } catch (error) {
+    console.error('Decline request error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const getContacts = async (req: Request, res: Response) => {
+  // @ts-expect-error - dodane w middleware
+  const userId = req.user.userId;
+  console.debug('Request to api');
+
+  try {
+    const friends = await prisma.friend.findMany({
+      where: {
+        // WARNING: Check this out, potential bug
+        friendId: userId,
+        // OR: [{ userId: userId }, { friendId: userId }],
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+        friend: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    console.debug(friends);
+
+    const mappedFriends = friends.map((entry) => {
+      const isUserSender = entry.userId === userId;
+      const friendData = isUserSender ? entry.friend : entry.user;
+
+      return {
+        id: friendData.id,
+        firstName: friendData.firstName,
+        lastName: friendData.lastName,
+        email: friendData.email,
+      };
+    });
+
+    res.status(200).json(mappedFriends);
+  } catch (error) {
+    console.error('Error fetching contacts:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
