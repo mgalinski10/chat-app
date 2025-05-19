@@ -20,5 +20,51 @@ model User {
   password  String
   firstName String
   lastName  String
+  friends      Friend[]         @relation("UserFriends")
+  friendOf     Friend[]         @relation("UserFriendOf")
+  friendRequestsSent     FriendRequest[] @relation("SentRequests")
+  friendRequestsReceived FriendRequest[] @relation("ReceivedRequests")
+  blockedUsers Block[]          @relation("BlockedUsers")
+  blockedBy    Block[]          @relation("BlockedBy")
   createdAt DateTime @default(now())
+}
+
+model Friend {
+  id       Int    @id @default(autoincrement())
+  user     User   @relation("UserFriends", fields: [userId], references: [id])
+  userId   Int
+  friend   User   @relation("UserFriendOf", fields: [friendId], references: [id])
+  friendId Int
+  createdAt DateTime @default(now())
+
+  @@unique([userId, friendId])
+}
+
+model FriendRequest {
+  id         Int      @id @default(autoincrement())
+  sender     User     @relation("SentRequests", fields: [senderId], references: [id])
+  senderId   Int
+  receiver   User     @relation("ReceivedRequests", fields: [receiverId], references: [id])
+  receiverId Int
+  status     RequestStatus @default(PENDING)
+  createdAt  DateTime @default(now())
+
+  @@unique([senderId, receiverId])
+}
+
+enum RequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model Block {
+  id         Int    @id @default(autoincrement())
+  blocker    User   @relation("BlockedUsers", fields: [blockerId], references: [id])
+  blockerId  Int
+  blocked    User   @relation("BlockedBy", fields: [blockedId], references: [id])
+  blockedId  Int
+  createdAt  DateTime @default(now())
+
+  @@unique([blockerId, blockedId])
 }

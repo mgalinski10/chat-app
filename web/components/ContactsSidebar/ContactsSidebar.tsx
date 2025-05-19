@@ -18,9 +18,9 @@ const contactsSidebarItems: Item[] = [
     url: '/contacts/search',
   },
   {
-    name: 'You May Know',
+    name: 'Contact requests',
     icon: <AiOutlineUsergroupAdd className="text-gray-500 text-2xl" />,
-    url: '/contacts/suggestions',
+    url: '/contacts/requests',
   },
 ];
 

@@ -125,6 +125,28 @@ exports.Prisma.UserScalarFieldEnum = {
   createdAt: 'createdAt',
 };
 
+exports.Prisma.FriendScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  friendId: 'friendId',
+  createdAt: 'createdAt',
+};
+
+exports.Prisma.FriendRequestScalarFieldEnum = {
+  id: 'id',
+  senderId: 'senderId',
+  receiverId: 'receiverId',
+  status: 'status',
+  createdAt: 'createdAt',
+};
+
+exports.Prisma.BlockScalarFieldEnum = {
+  id: 'id',
+  blockerId: 'blockerId',
+  blockedId: 'blockedId',
+  createdAt: 'createdAt',
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc',
@@ -134,9 +156,17 @@ exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive',
 };
+exports.RequestStatus = exports.$Enums.RequestStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
+  Friend: 'Friend',
+  FriendRequest: 'FriendRequest',
+  Block: 'Block',
 };
 
 /**
