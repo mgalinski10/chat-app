@@ -1,17 +1,52 @@
 import { useContacts } from '@/contexts/ContactsContext';
 import { IoIosInformationCircleOutline } from 'react-icons/io';
+import axios from 'axios';
 
 interface RequestItemProps {
   id: number;
   firstName: string;
   lastName: string;
+  senderId: number;
 }
 
 const RequestItem: React.FC<RequestItemProps> = ({
   id,
   firstName,
   lastName,
+  senderId,
 }) => {
+  const { fetchReceivedRequests } = useContacts();
+
+  const handleAccept = async () => {
+    axios
+      .post(
+        'http://localhost:5000/contacts/request/accept',
+        {
+          senderId,
+        },
+        { withCredentials: true },
+      )
+      .then(() => fetchReceivedRequests())
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleDecline = async () => {
+    axios
+      .post(
+        'http://localhost:5000/contacts/request/decline',
+        {
+          senderId,
+        },
+        { withCredentials: true },
+      )
+      .then(() => fetchReceivedRequests())
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <div className="h-full w-full bg-white rounded-lg shadow flex flex-col p-4">
       <div className="flex-1 flex items-center justify-center">
@@ -25,10 +60,16 @@ const RequestItem: React.FC<RequestItemProps> = ({
       </p>
 
       <div className="mt-4 flex justify-between">
-        <button className="bg-blue-800 text-white text-sm px-3 py-1 rounded hover:bg-blue-900 w-full mr-1">
+        <button
+          onClick={handleAccept}
+          className="bg-blue-800 text-white text-sm px-3 py-1 rounded hover:bg-blue-900 w-full mr-1"
+        >
           Accept
         </button>
-        <button className="bg-gray-200 text-black text-sm px-3 py-1 rounded hover:bg-gray-300 w-full ml-1">
+        <button
+          onClick={handleDecline}
+          className="bg-gray-200 text-black text-sm px-3 py-1 rounded hover:bg-gray-300 w-full ml-1"
+        >
           Decline
         </button>
       </div>
@@ -59,6 +100,7 @@ const ReceivedRequests = () => {
             id={request.id}
             firstName={request.sentBy.firstName}
             lastName={request.sentBy.lastName}
+            senderId={request.sentBy.id}
           />
         </li>
       ))}

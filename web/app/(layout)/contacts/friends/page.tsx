@@ -4,9 +4,14 @@ import Spinner from '@/components/Spinner/Spinner';
 import { useContacts } from '@/contexts/ContactsContext';
 import { IoIosInformationCircleOutline } from 'react-icons/io';
 import ContactList from '@/components/ContactList/ContactList';
+import { useEffect } from 'react';
 
 const FriendsPage = () => {
-  const { contacts } = useContacts();
+  const { contacts, fetchContacts } = useContacts();
+
+  useEffect(() => {
+    fetchContacts();
+  }, []);
 
   if (!contacts) return <Spinner />;
 

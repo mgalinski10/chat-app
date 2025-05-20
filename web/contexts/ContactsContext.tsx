@@ -21,6 +21,8 @@ type ContactsContextType = {
   sent: FriendRequestSent[] | null;
   received: FriendRequestReceived[] | null;
   fetchContacts: () => Promise<void>;
+  fetchReceivedRequests: () => Promise<void>;
+  fetchSentRequests: () => Promise<void>;
 };
 
 type FriendRequestReceived = {
@@ -96,7 +98,14 @@ export default function ContactsProvider({
 
   return (
     <ContactsContext.Provider
-      value={{ contacts, fetchContacts, sent, received }}
+      value={{
+        contacts,
+        fetchContacts,
+        sent,
+        received,
+        fetchReceivedRequests,
+        fetchSentRequests,
+      }}
     >
       {children}
     </ContactsContext.Provider>
