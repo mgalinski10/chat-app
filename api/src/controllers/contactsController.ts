@@ -12,6 +12,8 @@ export const sendContactRequest = async (req: Request, res: Response) => {
   const senderId = req.user.userId;
   const receiverId = req.body.receiverId;
 
+  console.debug(req.body.receiverId);
+
   //   console.debug(senderId, receiverId);
   if (senderId === receiverId) {
     res.status(400).json("You can't add yourself.");
@@ -29,7 +31,24 @@ export const sendContactRequest = async (req: Request, res: Response) => {
     });
 
     if (existing) {
-      res.status(400).json({ message: 'Request is already pending' });
+      if (existing.status === RequestStatus.REJECTED) {
+        await prisma.friendRequest.update({
+          where: {
+            senderId_receiverId: {
+              senderId: existing.senderId,
+              receiverId: existing.receiverId,
+            },
+          },
+          data: {
+            status: RequestStatus.PENDING,
+          },
+        });
+
+        res.status(200).json({ message: 'Friend request re-sent' });
+        return;
+      }
+
+      res.status(400).json({ message: 'Friend request already exists' });
       return;
     }
 
@@ -211,6 +230,77 @@ export const getContacts = async (req: Request, res: Response) => {
     res.status(200).json(mappedFriends);
   } catch (error) {
     console.error('Error fetching contacts:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const getSentRequests = async (req: Request, res: Response) => {
+  // @ts-expect-error - from middleware
+  const userId = req.user.userId;
+  console.debug(userId);
+
+  try {
+    const requests = await prisma.friendRequest.findMany({
+      where: {
+        senderId: userId,
+        status: RequestStatus.PENDING,
+      },
+      include: {
+        receiver: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    const formatted = requests.map((req) => ({
+      id: req.id,
+      status: req.status,
+      sentTo: req.receiver,
+    }));
+
+    res.status(200).json(formatted);
+  } catch (error) {
+    console.error('Error fetching sent requests:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const getReceivedRequests = async (req: Request, res: Response) => {
+  // @ts-expect-error - from middleware
+  const userId = req.user.userId;
+
+  try {
+    const requests = await prisma.friendRequest.findMany({
+      where: {
+        receiverId: userId,
+        status: RequestStatus.PENDING,
+      },
+      include: {
+        sender: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    const formatted = requests.map((req) => ({
+      id: req.id,
+      status: req.status,
+      sentBy: req.sender,
+    }));
+
+    res.status(200).json(formatted);
+  } catch (error) {
+    console.error('Error fetching received requests:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };

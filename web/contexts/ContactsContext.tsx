@@ -18,7 +18,31 @@ type Contact = {
 
 type ContactsContextType = {
   contacts: Contact[] | null;
+  sent: FriendRequestSent[] | null;
+  received: FriendRequestReceived[] | null;
   fetchContacts: () => Promise<void>;
+};
+
+type FriendRequestReceived = {
+  id: number;
+  status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+  sentBy: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+};
+
+type FriendRequestSent = {
+  id: number;
+  status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+  sentTo: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
 };
 
 export const ContactsContext = createContext<ContactsContextType | null>(null);
@@ -29,6 +53,10 @@ export default function ContactsProvider({
   children: React.ReactNode;
 }) {
   const [contacts, setContacts] = useState<Contact[] | null>(null);
+  const [sent, setSent] = useState<FriendRequestSent[] | null>(null);
+  const [received, setReceived] = useState<FriendRequestReceived[] | null>(
+    null,
+  );
 
   const fetchContacts = useCallback(async () => {
     try {
@@ -42,12 +70,34 @@ export default function ContactsProvider({
     }
   }, []);
 
+  const fetchSentRequests = async () => {
+    axios
+      .get('http://localhost:5000/contacts/requests/sent', {
+        withCredentials: true,
+      })
+      .then((res) => setSent(res.data))
+      .catch(() => setSent(null));
+  };
+
+  const fetchReceivedRequests = async () => {
+    axios
+      .get('http://localhost:5000/contacts/requests/received', {
+        withCredentials: true,
+      })
+      .then((res) => setReceived(res.data))
+      .catch(() => setReceived(null));
+  };
+
   useEffect(() => {
     fetchContacts();
+    fetchSentRequests();
+    fetchReceivedRequests();
   }, []);
 
   return (
-    <ContactsContext.Provider value={{ contacts, fetchContacts }}>
+    <ContactsContext.Provider
+      value={{ contacts, fetchContacts, sent, received }}
+    >
       {children}
     </ContactsContext.Provider>
   );

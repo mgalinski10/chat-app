@@ -23,7 +23,7 @@ const FriendsPage = () => {
 
   return (
     <div>
-      <h1 className="text-lg font-semibold mb-5">Contacts</h1>
+      <p className="text-lg font-semibold mb-5">Contacts</p>
       <ContactList contacts={contacts} />
     </div>
   );

@@ -6,30 +6,6 @@ import { usePathname } from 'next/navigation';
 import Spinner from '../Spinner/Spinner';
 import { IoIosInformationCircleOutline } from 'react-icons/io';
 
-// const mock = [
-//   {
-//     id: '1',
-//     firstName: 'Anna',
-//     lastName: 'Kowalska',
-//     avatar: 'https://i.pravatar.cc/150?u=anna.kowalska',
-//     url: '/messages/1',
-//   },
-//   {
-//     id: '2',
-//     firstName: 'John',
-//     lastName: 'Smith',
-//     avatar: 'https://i.pravatar.cc/150?u=john.smith',
-//     url: '/messages/2',
-//   },
-//   {
-//     id: '3',
-//     firstName: 'Michał',
-//     lastName: 'Galiński',
-//     avatar: 'https://i.pravatar.cc/150?u=michal.galinski',
-//     url: '/messages/3',
-//   },
-// ];
-
 type MessageSideBarItem = {
   id: number;
   firstName: string;

@@ -17,18 +17,16 @@ const ContactListItem = ({ id, firstName, lastName }: ItemProps) => {
   return (
     <Link
       href={`/messages/${id}`}
-      className="bg-white rounded-xl shadow p-4 flex flex-col items-center hover:cursor-pointer hover:bg-gray-50"
+      className="bg-white rounded-xl shadow p-4 aspect-square flex flex-col items-center justify-center text-center hover:cursor-pointer hover:bg-gray-50"
     >
-      <div className="flex flex-col items-center w-full h-full">
-        <img
-          src={`https://api.dicebear.com/7.x/thumbs/svg?seed=${id}`}
-          alt={`${firstName} ${lastName}`}
-          className="w-20 h-20 rounded-full object-cover mb-3"
-        />
-        <p className="text-center font-medium">
-          {firstName} {lastName}
-        </p>
-      </div>
+      <img
+        src={`https://api.dicebear.com/7.x/thumbs/svg?seed=${id}`}
+        alt={`${firstName} ${lastName}`}
+        className="w-20 h-20 rounded-full object-cover mb-3"
+      />
+      <p className="font-medium">
+        {firstName} {lastName}
+      </p>
     </Link>
   );
 };
@@ -39,7 +37,7 @@ type ListProps = {
 
 const ContactList = ({ contacts }: ListProps) => {
   return (
-    <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+    <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 w-full mb-5">
       {contacts.map((contact) => (
         <li key={contact.id}>
           <ContactListItem
