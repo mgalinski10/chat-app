@@ -1,6 +1,7 @@
 import { useContacts } from '@/contexts/ContactsContext';
 import { IoIosInformationCircleOutline } from 'react-icons/io';
 import axios from 'axios';
+import { useUser } from '@/hooks/useUser';
 
 interface RequestItemProps {
   id: number;
@@ -16,6 +17,7 @@ const RequestItem: React.FC<RequestItemProps> = ({
   senderId,
 }) => {
   const { fetchReceivedRequests } = useContacts();
+  const { fetchAllUsers } = useUser();
 
   const handleAccept = async () => {
     axios
@@ -41,7 +43,10 @@ const RequestItem: React.FC<RequestItemProps> = ({
         },
         { withCredentials: true },
       )
-      .then(() => fetchReceivedRequests())
+      .then(async () => {
+        await fetchReceivedRequests();
+        fetchAllUsers();
+      })
       .catch((error) => {
         console.log(error);
       });

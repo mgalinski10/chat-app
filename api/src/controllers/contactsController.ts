@@ -159,21 +159,16 @@ export const declineContactRequest = async (req: Request, res: Response) => {
       return;
     }
 
-    const updatedRequest = await prisma.friendRequest.update({
+    await prisma.friendRequest.delete({
       where: {
         senderId_receiverId: {
           senderId,
           receiverId,
         },
       },
-      data: {
-        status: RequestStatus.REJECTED,
-      },
     });
 
-    res
-      .status(200)
-      .json({ message: 'Friend request declined', updatedRequest });
+    res.status(200).json({ message: 'Friend request declined' });
     return;
   } catch (error) {
     console.error('Decline request error:', error);

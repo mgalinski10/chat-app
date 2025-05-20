@@ -13,6 +13,7 @@ type User = {
 type UserContextType = {
   user: User | null;
   allUsers: User[] | null;
+  fetchAllUsers: () => void;
 };
 
 export const UserContext = createContext<UserContextType | null>(null);
@@ -32,15 +33,19 @@ export default function UserProvider({
       .catch(() => setUser(null));
   }, []);
 
-  useEffect(() => {
+  const fetchAllUsers = () => {
     axios
       .get('http://localhost:5000/user/all', { withCredentials: true })
       .then((res) => setAllUsers(res.data))
       .catch(() => setAllUsers(null));
+  };
+
+  useEffect(() => {
+    fetchAllUsers();
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, allUsers }}>
+    <UserContext.Provider value={{ user, allUsers, fetchAllUsers }}>
       {children}
     </UserContext.Provider>
   );

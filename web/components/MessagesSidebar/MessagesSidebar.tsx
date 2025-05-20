@@ -50,17 +50,6 @@ const MessagesSidebar = () => {
     return <Spinner />;
   }
 
-  if (contacts.length === 0) {
-    return (
-      <div className="w-full flex items-center justify-center space-x-2 text-gray-600">
-        <IoIosInformationCircleOutline />
-        <span>
-          Looks like your contact list is empty. Start connecting with others!
-        </span>
-      </div>
-    );
-  }
-
   return (
     <aside
       className="h-full bg-white rounded-xl
@@ -68,9 +57,16 @@ const MessagesSidebar = () => {
     >
       <h2 className="text-lg font-semibold mb-4">Chats</h2>
       <ul className="space-y-2">
-        {contacts.map((item) => {
-          return <MessagesSidebarItem key={item.id} item={item} />;
-        })}
+        {contacts.length === 0 ? (
+          <div className="w-full flex items-center justify-center space-x-2 text-gray-600">
+            <IoIosInformationCircleOutline />
+            <span>Looks like your contact list is empty.</span>
+          </div>
+        ) : (
+          contacts.map((item) => {
+            return <MessagesSidebarItem key={item.id} item={item} />;
+          })
+        )}
       </ul>
     </aside>
   );

@@ -1,13 +1,20 @@
 'use client';
+import { useContacts } from '@/contexts/ContactsContext';
 import { useUser } from '@/hooks/useUser';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { IoIosInformationCircleOutline } from 'react-icons/io';
 
 const SearchFriendsPage = () => {
-  const { allUsers } = useUser();
+  const { allUsers, fetchAllUsers } = useUser();
+  const { fetchSentRequests } = useContacts();
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState(allUsers);
+
+  const results = allUsers?.filter((user) =>
+    `${user.firstName} ${user.lastName}`
+      .toLowerCase()
+      .includes(query.toLowerCase()),
+  );
 
   if (!allUsers || allUsers.length === 0) {
     return (
@@ -32,19 +39,15 @@ const SearchFriendsPage = () => {
       console.debug(response);
     } catch (error) {
       console.error('Error sending request:', error);
+    } finally {
+      fetchAllUsers();
+      fetchSentRequests();
     }
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setQuery(value);
-
-    const filtered = allUsers.filter((user) =>
-      `${user.firstName} ${user.lastName}`
-        .toLowerCase()
-        .includes(value.toLowerCase()),
-    );
-    setResults(filtered);
   };
 
   return (
