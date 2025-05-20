@@ -1,52 +1,57 @@
 'use client';
 
+import { useContacts } from '@/contexts/ContactsContext';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Spinner from '../Spinner/Spinner';
+import { IoIosInformationCircleOutline } from 'react-icons/io';
 
-const mock = [
-  {
-    id: '1',
-    firstName: 'Anna',
-    lastName: 'Kowalska',
-    avatar: 'https://i.pravatar.cc/150?u=anna.kowalska',
-    url: '/messages/1',
-  },
-  {
-    id: '2',
-    firstName: 'John',
-    lastName: 'Smith',
-    avatar: 'https://i.pravatar.cc/150?u=john.smith',
-    url: '/messages/2',
-  },
-  {
-    id: '3',
-    firstName: 'Michał',
-    lastName: 'Galiński',
-    avatar: 'https://i.pravatar.cc/150?u=michal.galinski',
-    url: '/messages/3',
-  },
-];
+// const mock = [
+//   {
+//     id: '1',
+//     firstName: 'Anna',
+//     lastName: 'Kowalska',
+//     avatar: 'https://i.pravatar.cc/150?u=anna.kowalska',
+//     url: '/messages/1',
+//   },
+//   {
+//     id: '2',
+//     firstName: 'John',
+//     lastName: 'Smith',
+//     avatar: 'https://i.pravatar.cc/150?u=john.smith',
+//     url: '/messages/2',
+//   },
+//   {
+//     id: '3',
+//     firstName: 'Michał',
+//     lastName: 'Galiński',
+//     avatar: 'https://i.pravatar.cc/150?u=michal.galinski',
+//     url: '/messages/3',
+//   },
+// ];
 
 type MessageSideBarItem = {
-  id: string;
+  id: number;
   firstName: string;
   lastName: string;
-  avatar: string;
-  url: string;
+  email: string;
 };
 
 const MessagesSidebarItem = ({ item }: { item: MessageSideBarItem }) => {
   const pathname = usePathname();
-  const isActive = pathname.startsWith(item.url);
+  const isActive = pathname.startsWith(`/messages/${item.id}`);
 
   return (
     <li
       className={`flex items-center space-x-4 p-3 cursor-pointer border-l-4 transition-colors duration-300
         ${isActive ? 'border-gray-500' : 'border-transparent hover:border-gray-500'}`}
     >
-      <Link href={item.url} className="flex items-center space-x-4 w-full">
+      <Link
+        href={`/messages/${item.id}`}
+        className="flex items-center space-x-4 w-full"
+      >
         <img
-          src={item.avatar}
+          src={`https://api.dicebear.com/7.x/thumbs/svg?seed=${item.id}`}
           className="w-12 h-12 rounded-full object-cover"
         />
         <div className="flex flex-col overflow-hidden">
@@ -63,6 +68,22 @@ const MessagesSidebarItem = ({ item }: { item: MessageSideBarItem }) => {
 const MessagesSidebar = () => {
   // TODO: Add Link and proper routing: Click conversation -> change url on smth like: /messages/12345-1233-123123 -> display conversation chat with that id
   // so meaby useProvider or smth to fetch conversation from here
+  const { contacts } = useContacts();
+
+  if (!contacts) {
+    return <Spinner />;
+  }
+
+  if (contacts.length === 0) {
+    return (
+      <div className="w-full flex items-center justify-center space-x-2 text-gray-600">
+        <IoIosInformationCircleOutline />
+        <span>
+          Looks like your contact list is empty. Start connecting with others!
+        </span>
+      </div>
+    );
+  }
 
   return (
     <aside
@@ -71,7 +92,7 @@ const MessagesSidebar = () => {
     >
       <h2 className="text-lg font-semibold mb-4">Chats</h2>
       <ul className="space-y-2">
-        {mock.map((item) => {
+        {contacts.map((item) => {
           return <MessagesSidebarItem key={item.id} item={item} />;
         })}
       </ul>

@@ -163,7 +163,7 @@ export const declineContactRequest = async (req: Request, res: Response) => {
 };
 
 export const getContacts = async (req: Request, res: Response) => {
-  // @ts-expect-error - dodane w middleware
+  // @ts-expect-error - middleware
   const userId = req.user.userId;
   console.debug('Request to api');
 

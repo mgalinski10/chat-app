@@ -11,15 +11,16 @@ const sidebarItems: Item[] = [
     url: '/messages',
   },
   {
-    name: 'notifications',
-    icon: <FiBell className="text-white text-2xl" />,
-    url: '/notifications',
-  },
-  {
     name: 'contacts',
     icon: <FiUsers className="text-white text-2xl" />,
     url: '/contacts',
   },
+  {
+    name: 'notifications',
+    icon: <FiBell className="text-white text-2xl" />,
+    url: '/notifications',
+  },
+
   {
     name: 'settings',
     icon: <FiSettings className="text-white text-2xl" />,
