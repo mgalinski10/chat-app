@@ -32,3 +32,50 @@ export const getMe = async (req: Request, res: Response) => {
     res.status(404).json({ message: 'User not found.' });
   }
 };
+
+export const getAllUsers = async (req: Request, res: Response) => {
+  // @ts-expect-error from middleware
+  const userId = req.user.userId;
+
+  // HAX
+  try {
+    const friends = await prisma.friend.findMany({
+      where: {
+        OR: [{ userId }, { friendId: userId }],
+      },
+    });
+
+    const sentRequests = await prisma.friendRequest.findMany({
+      where: { senderId: userId },
+    });
+
+    const receivedRequests = await prisma.friendRequest.findMany({
+      where: { receiverId: userId },
+    });
+
+    const excludedUserIds = new Set([
+      userId,
+      ...friends.map((f) => (f.userId === userId ? f.friendId : f.userId)),
+      ...sentRequests.map((r) => r.receiverId),
+      ...receivedRequests.map((r) => r.senderId),
+    ]);
+
+    const potentialFriends = await prisma.user.findMany({
+      where: {
+        id: {
+          notIn: Array.from(excludedUserIds),
+        },
+      },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+      },
+    });
+
+    res.json(potentialFriends);
+  } catch (error) {
+    console.error('Error get all user:', error);
+    res.status(500).json({ message: 'Something went wrong' });
+  }
+};
