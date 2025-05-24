@@ -20,9 +20,11 @@ type ContactsContextType = {
   contacts: Contact[] | null;
   sent: FriendRequestSent[] | null;
   received: FriendRequestReceived[] | null;
+  blocked: BlockedUser[] | null;
   fetchContacts: () => Promise<void>;
   fetchReceivedRequests: () => Promise<void>;
   fetchSentRequests: () => Promise<void>;
+  fetchBlockedUsers: () => Promise<void>;
 };
 
 type FriendRequestReceived = {
@@ -47,6 +49,13 @@ type FriendRequestSent = {
   };
 };
 
+type BlockedUser = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+};
+
 export const ContactsContext = createContext<ContactsContextType | null>(null);
 
 export default function ContactsProvider({
@@ -59,6 +68,7 @@ export default function ContactsProvider({
   const [received, setReceived] = useState<FriendRequestReceived[] | null>(
     null,
   );
+  const [blocked, setBlocked] = useState<BlockedUser[] | null>(null);
 
   const fetchContacts = useCallback(async () => {
     try {
@@ -90,10 +100,23 @@ export default function ContactsProvider({
       .catch(() => setReceived(null));
   };
 
+  const fetchBlockedUsers = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/contacts/blocked', {
+        withCredentials: true,
+      });
+      setBlocked(res.data);
+    } catch (error) {
+      console.error('Error fetching blocked users:', error);
+      setBlocked(null);
+    }
+  };
+
   useEffect(() => {
     fetchContacts();
     fetchSentRequests();
     fetchReceivedRequests();
+    fetchBlockedUsers();
   }, []);
 
   return (
@@ -105,6 +128,8 @@ export default function ContactsProvider({
         received,
         fetchReceivedRequests,
         fetchSentRequests,
+        blocked,
+        fetchBlockedUsers,
       }}
     >
       {children}

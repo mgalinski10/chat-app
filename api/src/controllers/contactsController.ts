@@ -179,46 +179,49 @@ export const declineContactRequest = async (req: Request, res: Response) => {
 export const getContacts = async (req: Request, res: Response) => {
   // @ts-expect-error - middleware
   const userId = req.user.userId;
-  console.debug('Request to api');
 
   try {
-    const friends = await prisma.friend.findMany({
-      where: {
-        // WARNING: Check this out, potential bug
-        friendId: userId,
-        // OR: [{ userId: userId }, { friendId: userId }],
-      },
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
       include: {
-        user: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
+        friends: {
+          include: {
+            friend: true,
           },
         },
-        friend: {
+        blockedUsers: {
           select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
+            blockedId: true,
+          },
+        },
+        blockedBy: {
+          select: {
+            blockerId: true,
           },
         },
       },
     });
 
-    console.debug(friends);
+    if (!user) {
+      res.status(404).json('Friends not found.');
+      return;
+    }
 
-    const mappedFriends = friends.map((entry) => {
-      const isUserSender = entry.userId === userId;
-      const friendData = isUserSender ? entry.friend : entry.user;
+    const blockedIds = user.blockedUsers.map((block) => block.blockedId);
+    const blockedByIds = user.blockedBy.map((block) => block.blockerId);
 
+    const filteredFriends = user.friends.filter(
+      (friend) =>
+        !blockedIds.includes(friend.friend.id) &&
+        !blockedByIds.includes(friend.friend.id),
+    );
+
+    const mappedFriends = filteredFriends.map((friend) => {
       return {
-        id: friendData.id,
-        firstName: friendData.firstName,
-        lastName: friendData.lastName,
-        email: friendData.email,
+        id: friend.friend.id,
+        firstName: friend.friend.firstName,
+        lastName: friend.friend.lastName,
+        email: friend.friend.email,
       };
     });
 
@@ -343,17 +346,27 @@ export const unblockUser = async (req: Request, res: Response) => {
   }
 
   try {
+    const existingBlock = await prisma.block.findUnique({
+      where: {
+        blockerId_blockedId: { blockerId, blockedId },
+      },
+    });
+
+    if (!existingBlock) {
+      res.status(404).json({ message: 'Block entry not found' });
+      return;
+    }
+
     await prisma.block.delete({
       where: {
         blockerId_blockedId: { blockerId, blockedId },
       },
     });
+
     res.status(200).json({ message: 'User unblocked' });
-    return;
   } catch (error) {
     console.error('Unblock user error:', error);
     res.status(500).json({ message: 'Internal server error' });
-    return;
   }
 };
 

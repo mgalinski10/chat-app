@@ -21,6 +21,7 @@ const ContactListItem = ({ id, firstName, lastName }: ItemProps) => {
     >
       <img
         src={`https://api.dicebear.com/7.x/thumbs/svg?seed=${id}`}
+        // src={'/piwonia.jpg'}
         alt={`${firstName} ${lastName}`}
         className="w-20 h-20 rounded-full object-cover mb-3"
       />
