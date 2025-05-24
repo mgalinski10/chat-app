@@ -7,6 +7,9 @@ import {
   sendContactRequest,
   getReceivedRequests,
   getSentRequests,
+  blockUser,
+  unblockUser,
+  getBlockedUsers,
 } from '../controllers/contactsController';
 
 const router = express.Router();
@@ -20,8 +23,8 @@ router.delete('/:friendId', authenticateToken);
 router.get('/requests/sent', authenticateToken, getSentRequests);
 router.get('/requests/received', authenticateToken, getReceivedRequests);
 
-router.post('/block', authenticateToken);
-router.post('/unblock', authenticateToken);
-router.get('/blocked', authenticateToken);
+router.post('/block', authenticateToken, blockUser);
+router.post('/unblock', authenticateToken, unblockUser);
+router.get('/blocked', authenticateToken, getBlockedUsers);
 
 export default router;

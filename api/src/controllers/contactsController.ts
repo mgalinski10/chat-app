@@ -299,3 +299,89 @@ export const getReceivedRequests = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+export const blockUser = async (req: Request, res: Response) => {
+  // @ts-expect-error - from middleware
+  const blockerId = req.user.userId;
+  const { blockedId } = req.body;
+
+  if (!blockedId) {
+    res.status(400).json({ message: 'Missing blockedId' });
+    return;
+  }
+  if (blockedId === blockerId) {
+    res.status(400).json({ message: 'Cannot block yourself' });
+    return;
+  }
+
+  try {
+    await prisma.block.create({
+      data: { blockerId, blockedId },
+    });
+    res.status(200).json({ message: 'User blocked' });
+    return;
+  } catch (error) {
+    // @ts-expect-error i dont know the type at the moment
+    if (error.code === 'P2002') {
+      res.status(409).json({ message: 'Already blocked' });
+      return;
+    }
+    console.error('Block user error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+    return;
+  }
+};
+
+export const unblockUser = async (req: Request, res: Response) => {
+  // @ts-expect-error - from middleware
+  const blockerId = req.user.userId;
+  const { blockedId } = req.body;
+
+  if (!blockedId) {
+    res.status(400).json({ message: 'Missing blockedId' });
+    return;
+  }
+
+  try {
+    await prisma.block.delete({
+      where: {
+        blockerId_blockedId: { blockerId, blockedId },
+      },
+    });
+    res.status(200).json({ message: 'User unblocked' });
+    return;
+  } catch (error) {
+    console.error('Unblock user error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+    return;
+  }
+};
+
+export const getBlockedUsers = async (req: Request, res: Response) => {
+  // @ts-expect-error - from middleware
+  const blockerId = req.user.userId;
+
+  try {
+    const blocked = await prisma.block.findMany({
+      where: { blockerId },
+      include: {
+        blocked: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    const result = blocked.map((entry) => entry.blocked);
+    res.status(200).json(result);
+    return;
+  } catch (error) {
+    console.error('Get blocked users error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+    return;
+  }
+};
