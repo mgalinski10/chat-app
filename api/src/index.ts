@@ -7,13 +7,13 @@ import express from 'express';
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
 import contactsRoutes from './routes/contactsRoutes';
-
+import messagesRoutes from './routes/messagesRoutes';
 dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
 // WARNING: removed const io = ...
-setupSocket(server);
+export const io = setupSocket(server);
 const PORT = process.env.API_PORT || 5000;
 
 app.use(express.json());
@@ -28,6 +28,7 @@ app.use(cookieParser());
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/contacts', contactsRoutes);
+app.use('/messages', messagesRoutes);
 
 server.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

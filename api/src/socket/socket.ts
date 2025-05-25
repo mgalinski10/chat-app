@@ -47,6 +47,8 @@ export const setupSocket = (server: HTTPServer) => {
     console.log('🟢 Socket connected:', socket.id, 'User:', socket.data.user);
     const userId = socket.data.user.userId;
 
+    socket.join(`user:${userId}`);
+
     await prisma.user.update({
       where: { id: userId },
       data: { status: 'ONLINE' },
