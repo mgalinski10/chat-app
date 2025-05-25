@@ -26,7 +26,14 @@ model User {
   friendRequestsReceived FriendRequest[] @relation("ReceivedRequests")
   blockedUsers           Block[]         @relation("BlockedUsers")
   blockedBy              Block[]         @relation("BlockedBy")
+  status                 UserStatus      @default(OFFLINE)
   createdAt              DateTime        @default(now())
+}
+
+enum UserStatus {
+  ONLINE
+  OFFLINE
+  BUSY
 }
 
 model Friend {

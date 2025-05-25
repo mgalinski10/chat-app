@@ -37,6 +37,14 @@ export type Block = $Result.DefaultSelection<Prisma.$BlockPayload>;
  * Enums
  */
 export namespace $Enums {
+  export const UserStatus: {
+    ONLINE: 'ONLINE';
+    OFFLINE: 'OFFLINE';
+    BUSY: 'BUSY';
+  };
+
+  export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus];
+
   export const RequestStatus: {
     PENDING: 'PENDING';
     ACCEPTED: 'ACCEPTED';
@@ -46,6 +54,10 @@ export namespace $Enums {
   export type RequestStatus =
     (typeof RequestStatus)[keyof typeof RequestStatus];
 }
+
+export type UserStatus = $Enums.UserStatus;
+
+export const UserStatus: typeof $Enums.UserStatus;
 
 export type RequestStatus = $Enums.RequestStatus;
 
@@ -1366,6 +1378,7 @@ export namespace Prisma {
     password: string | null;
     firstName: string | null;
     lastName: string | null;
+    status: $Enums.UserStatus | null;
     createdAt: Date | null;
   };
 
@@ -1375,6 +1388,7 @@ export namespace Prisma {
     password: string | null;
     firstName: string | null;
     lastName: string | null;
+    status: $Enums.UserStatus | null;
     createdAt: Date | null;
   };
 
@@ -1384,6 +1398,7 @@ export namespace Prisma {
     password: number;
     firstName: number;
     lastName: number;
+    status: number;
     createdAt: number;
     _all: number;
   };
@@ -1402,6 +1417,7 @@ export namespace Prisma {
     password?: true;
     firstName?: true;
     lastName?: true;
+    status?: true;
     createdAt?: true;
   };
 
@@ -1411,6 +1427,7 @@ export namespace Prisma {
     password?: true;
     firstName?: true;
     lastName?: true;
+    status?: true;
     createdAt?: true;
   };
 
@@ -1420,6 +1437,7 @@ export namespace Prisma {
     password?: true;
     firstName?: true;
     lastName?: true;
+    status?: true;
     createdAt?: true;
     _all?: true;
   };
@@ -1519,6 +1537,7 @@ export namespace Prisma {
     password: string;
     firstName: string;
     lastName: string;
+    status: $Enums.UserStatus;
     createdAt: Date;
     _count: UserCountAggregateOutputType | null;
     _avg: UserAvgAggregateOutputType | null;
@@ -1548,6 +1567,7 @@ export namespace Prisma {
       password?: boolean;
       firstName?: boolean;
       lastName?: boolean;
+      status?: boolean;
       createdAt?: boolean;
       friends?: boolean | User$friendsArgs<ExtArgs>;
       friendOf?: boolean | User$friendOfArgs<ExtArgs>;
@@ -1571,6 +1591,7 @@ export namespace Prisma {
       password?: boolean;
       firstName?: boolean;
       lastName?: boolean;
+      status?: boolean;
       createdAt?: boolean;
     },
     ExtArgs['result']['user']
@@ -1585,6 +1606,7 @@ export namespace Prisma {
       password?: boolean;
       firstName?: boolean;
       lastName?: boolean;
+      status?: boolean;
       createdAt?: boolean;
     },
     ExtArgs['result']['user']
@@ -1596,13 +1618,20 @@ export namespace Prisma {
     password?: boolean;
     firstName?: boolean;
     lastName?: boolean;
+    status?: boolean;
     createdAt?: boolean;
   };
 
   export type UserOmit<
     ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs,
   > = $Extensions.GetOmit<
-    'id' | 'email' | 'password' | 'firstName' | 'lastName' | 'createdAt',
+    | 'id'
+    | 'email'
+    | 'password'
+    | 'firstName'
+    | 'lastName'
+    | 'status'
+    | 'createdAt',
     ExtArgs['result']['user']
   >;
   export type UserInclude<
@@ -1642,6 +1671,7 @@ export namespace Prisma {
         password: string;
         firstName: string;
         lastName: string;
+        status: $Enums.UserStatus;
         createdAt: Date;
       },
       ExtArgs['result']['user']
@@ -2301,6 +2331,7 @@ export namespace Prisma {
     readonly password: FieldRef<'User', 'String'>;
     readonly firstName: FieldRef<'User', 'String'>;
     readonly lastName: FieldRef<'User', 'String'>;
+    readonly status: FieldRef<'User', 'UserStatus'>;
     readonly createdAt: FieldRef<'User', 'DateTime'>;
   }
 
@@ -6976,6 +7007,7 @@ export namespace Prisma {
     password: 'password';
     firstName: 'firstName';
     lastName: 'lastName';
+    status: 'status';
     createdAt: 'createdAt';
   };
 
@@ -7064,6 +7096,22 @@ export namespace Prisma {
   >;
 
   /**
+   * Reference to a field of type 'UserStatus'
+   */
+  export type EnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
+    $PrismaModel,
+    'UserStatus'
+  >;
+
+  /**
+   * Reference to a field of type 'UserStatus[]'
+   */
+  export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
+    $PrismaModel,
+    'UserStatus[]'
+  >;
+
+  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<
@@ -7122,6 +7170,7 @@ export namespace Prisma {
     password?: StringFilter<'User'> | string;
     firstName?: StringFilter<'User'> | string;
     lastName?: StringFilter<'User'> | string;
+    status?: EnumUserStatusFilter<'User'> | $Enums.UserStatus;
     createdAt?: DateTimeFilter<'User'> | Date | string;
     friends?: FriendListRelationFilter;
     friendOf?: FriendListRelationFilter;
@@ -7137,6 +7186,7 @@ export namespace Prisma {
     password?: SortOrder;
     firstName?: SortOrder;
     lastName?: SortOrder;
+    status?: SortOrder;
     createdAt?: SortOrder;
     friends?: FriendOrderByRelationAggregateInput;
     friendOf?: FriendOrderByRelationAggregateInput;
@@ -7156,6 +7206,7 @@ export namespace Prisma {
       password?: StringFilter<'User'> | string;
       firstName?: StringFilter<'User'> | string;
       lastName?: StringFilter<'User'> | string;
+      status?: EnumUserStatusFilter<'User'> | $Enums.UserStatus;
       createdAt?: DateTimeFilter<'User'> | Date | string;
       friends?: FriendListRelationFilter;
       friendOf?: FriendListRelationFilter;
@@ -7173,6 +7224,7 @@ export namespace Prisma {
     password?: SortOrder;
     firstName?: SortOrder;
     lastName?: SortOrder;
+    status?: SortOrder;
     createdAt?: SortOrder;
     _count?: UserCountOrderByAggregateInput;
     _avg?: UserAvgOrderByAggregateInput;
@@ -7194,6 +7246,7 @@ export namespace Prisma {
     password?: StringWithAggregatesFilter<'User'> | string;
     firstName?: StringWithAggregatesFilter<'User'> | string;
     lastName?: StringWithAggregatesFilter<'User'> | string;
+    status?: EnumUserStatusWithAggregatesFilter<'User'> | $Enums.UserStatus;
     createdAt?: DateTimeWithAggregatesFilter<'User'> | Date | string;
   };
 
@@ -7398,6 +7451,7 @@ export namespace Prisma {
     password: string;
     firstName: string;
     lastName: string;
+    status?: $Enums.UserStatus;
     createdAt?: Date | string;
     friends?: FriendCreateNestedManyWithoutUserInput;
     friendOf?: FriendCreateNestedManyWithoutFriendInput;
@@ -7413,6 +7467,7 @@ export namespace Prisma {
     password: string;
     firstName: string;
     lastName: string;
+    status?: $Enums.UserStatus;
     createdAt?: Date | string;
     friends?: FriendUncheckedCreateNestedManyWithoutUserInput;
     friendOf?: FriendUncheckedCreateNestedManyWithoutFriendInput;
@@ -7427,6 +7482,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string;
     firstName?: StringFieldUpdateOperationsInput | string;
     lastName?: StringFieldUpdateOperationsInput | string;
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
     friends?: FriendUpdateManyWithoutUserNestedInput;
     friendOf?: FriendUpdateManyWithoutFriendNestedInput;
@@ -7442,6 +7498,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string;
     firstName?: StringFieldUpdateOperationsInput | string;
     lastName?: StringFieldUpdateOperationsInput | string;
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
     friends?: FriendUncheckedUpdateManyWithoutUserNestedInput;
     friendOf?: FriendUncheckedUpdateManyWithoutFriendNestedInput;
@@ -7457,6 +7514,7 @@ export namespace Prisma {
     password: string;
     firstName: string;
     lastName: string;
+    status?: $Enums.UserStatus;
     createdAt?: Date | string;
   };
 
@@ -7465,6 +7523,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string;
     firstName?: StringFieldUpdateOperationsInput | string;
     lastName?: StringFieldUpdateOperationsInput | string;
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
   };
 
@@ -7474,6 +7533,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string;
     firstName?: StringFieldUpdateOperationsInput | string;
     lastName?: StringFieldUpdateOperationsInput | string;
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
   };
 
@@ -7642,6 +7702,13 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string;
   };
 
+  export type EnumUserStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>;
+    in?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>;
+    notIn?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>;
+    not?: NestedEnumUserStatusFilter<$PrismaModel> | $Enums.UserStatus;
+  };
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>;
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>;
@@ -7689,6 +7756,7 @@ export namespace Prisma {
     password?: SortOrder;
     firstName?: SortOrder;
     lastName?: SortOrder;
+    status?: SortOrder;
     createdAt?: SortOrder;
   };
 
@@ -7702,6 +7770,7 @@ export namespace Prisma {
     password?: SortOrder;
     firstName?: SortOrder;
     lastName?: SortOrder;
+    status?: SortOrder;
     createdAt?: SortOrder;
   };
 
@@ -7711,6 +7780,7 @@ export namespace Prisma {
     password?: SortOrder;
     firstName?: SortOrder;
     lastName?: SortOrder;
+    status?: SortOrder;
     createdAt?: SortOrder;
   };
 
@@ -7750,6 +7820,18 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>;
     _min?: NestedStringFilter<$PrismaModel>;
     _max?: NestedStringFilter<$PrismaModel>;
+  };
+
+  export type EnumUserStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>;
+    in?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>;
+    notIn?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>;
+    not?:
+      | NestedEnumUserStatusWithAggregatesFilter<$PrismaModel>
+      | $Enums.UserStatus;
+    _count?: NestedIntFilter<$PrismaModel>;
+    _min?: NestedEnumUserStatusFilter<$PrismaModel>;
+    _max?: NestedEnumUserStatusFilter<$PrismaModel>;
   };
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -8095,6 +8177,10 @@ export namespace Prisma {
 
   export type StringFieldUpdateOperationsInput = {
     set?: string;
+  };
+
+  export type EnumUserStatusFieldUpdateOperationsInput = {
+    set?: $Enums.UserStatus;
   };
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -8640,6 +8726,13 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string;
   };
 
+  export type NestedEnumUserStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>;
+    in?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>;
+    notIn?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>;
+    not?: NestedEnumUserStatusFilter<$PrismaModel> | $Enums.UserStatus;
+  };
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>;
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>;
@@ -8693,6 +8786,18 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>;
     _min?: NestedStringFilter<$PrismaModel>;
     _max?: NestedStringFilter<$PrismaModel>;
+  };
+
+  export type NestedEnumUserStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>;
+    in?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>;
+    notIn?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>;
+    not?:
+      | NestedEnumUserStatusWithAggregatesFilter<$PrismaModel>
+      | $Enums.UserStatus;
+    _count?: NestedIntFilter<$PrismaModel>;
+    _min?: NestedEnumUserStatusFilter<$PrismaModel>;
+    _max?: NestedEnumUserStatusFilter<$PrismaModel>;
   };
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -9098,6 +9203,7 @@ export namespace Prisma {
     password: string;
     firstName: string;
     lastName: string;
+    status?: $Enums.UserStatus;
     createdAt?: Date | string;
     friendOf?: FriendCreateNestedManyWithoutFriendInput;
     friendRequestsSent?: FriendRequestCreateNestedManyWithoutSenderInput;
@@ -9112,6 +9218,7 @@ export namespace Prisma {
     password: string;
     firstName: string;
     lastName: string;
+    status?: $Enums.UserStatus;
     createdAt?: Date | string;
     friendOf?: FriendUncheckedCreateNestedManyWithoutFriendInput;
     friendRequestsSent?: FriendRequestUncheckedCreateNestedManyWithoutSenderInput;
@@ -9133,6 +9240,7 @@ export namespace Prisma {
     password: string;
     firstName: string;
     lastName: string;
+    status?: $Enums.UserStatus;
     createdAt?: Date | string;
     friends?: FriendCreateNestedManyWithoutUserInput;
     friendRequestsSent?: FriendRequestCreateNestedManyWithoutSenderInput;
@@ -9147,6 +9255,7 @@ export namespace Prisma {
     password: string;
     firstName: string;
     lastName: string;
+    status?: $Enums.UserStatus;
     createdAt?: Date | string;
     friends?: FriendUncheckedCreateNestedManyWithoutUserInput;
     friendRequestsSent?: FriendRequestUncheckedCreateNestedManyWithoutSenderInput;
@@ -9188,6 +9297,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string;
     firstName?: StringFieldUpdateOperationsInput | string;
     lastName?: StringFieldUpdateOperationsInput | string;
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
     friendOf?: FriendUpdateManyWithoutFriendNestedInput;
     friendRequestsSent?: FriendRequestUpdateManyWithoutSenderNestedInput;
@@ -9202,6 +9312,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string;
     firstName?: StringFieldUpdateOperationsInput | string;
     lastName?: StringFieldUpdateOperationsInput | string;
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
     friendOf?: FriendUncheckedUpdateManyWithoutFriendNestedInput;
     friendRequestsSent?: FriendRequestUncheckedUpdateManyWithoutSenderNestedInput;
@@ -9235,6 +9346,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string;
     firstName?: StringFieldUpdateOperationsInput | string;
     lastName?: StringFieldUpdateOperationsInput | string;
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
     friends?: FriendUpdateManyWithoutUserNestedInput;
     friendRequestsSent?: FriendRequestUpdateManyWithoutSenderNestedInput;
@@ -9249,6 +9361,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string;
     firstName?: StringFieldUpdateOperationsInput | string;
     lastName?: StringFieldUpdateOperationsInput | string;
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
     friends?: FriendUncheckedUpdateManyWithoutUserNestedInput;
     friendRequestsSent?: FriendRequestUncheckedUpdateManyWithoutSenderNestedInput;
@@ -9262,6 +9375,7 @@ export namespace Prisma {
     password: string;
     firstName: string;
     lastName: string;
+    status?: $Enums.UserStatus;
     createdAt?: Date | string;
     friends?: FriendCreateNestedManyWithoutUserInput;
     friendOf?: FriendCreateNestedManyWithoutFriendInput;
@@ -9276,6 +9390,7 @@ export namespace Prisma {
     password: string;
     firstName: string;
     lastName: string;
+    status?: $Enums.UserStatus;
     createdAt?: Date | string;
     friends?: FriendUncheckedCreateNestedManyWithoutUserInput;
     friendOf?: FriendUncheckedCreateNestedManyWithoutFriendInput;
@@ -9297,6 +9412,7 @@ export namespace Prisma {
     password: string;
     firstName: string;
     lastName: string;
+    status?: $Enums.UserStatus;
     createdAt?: Date | string;
     friends?: FriendCreateNestedManyWithoutUserInput;
     friendOf?: FriendCreateNestedManyWithoutFriendInput;
@@ -9311,6 +9427,7 @@ export namespace Prisma {
     password: string;
     firstName: string;
     lastName: string;
+    status?: $Enums.UserStatus;
     createdAt?: Date | string;
     friends?: FriendUncheckedCreateNestedManyWithoutUserInput;
     friendOf?: FriendUncheckedCreateNestedManyWithoutFriendInput;
@@ -9352,6 +9469,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string;
     firstName?: StringFieldUpdateOperationsInput | string;
     lastName?: StringFieldUpdateOperationsInput | string;
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
     friends?: FriendUpdateManyWithoutUserNestedInput;
     friendOf?: FriendUpdateManyWithoutFriendNestedInput;
@@ -9366,6 +9484,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string;
     firstName?: StringFieldUpdateOperationsInput | string;
     lastName?: StringFieldUpdateOperationsInput | string;
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
     friends?: FriendUncheckedUpdateManyWithoutUserNestedInput;
     friendOf?: FriendUncheckedUpdateManyWithoutFriendNestedInput;
@@ -9399,6 +9518,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string;
     firstName?: StringFieldUpdateOperationsInput | string;
     lastName?: StringFieldUpdateOperationsInput | string;
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
     friends?: FriendUpdateManyWithoutUserNestedInput;
     friendOf?: FriendUpdateManyWithoutFriendNestedInput;
@@ -9413,6 +9533,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string;
     firstName?: StringFieldUpdateOperationsInput | string;
     lastName?: StringFieldUpdateOperationsInput | string;
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
     friends?: FriendUncheckedUpdateManyWithoutUserNestedInput;
     friendOf?: FriendUncheckedUpdateManyWithoutFriendNestedInput;
@@ -9426,6 +9547,7 @@ export namespace Prisma {
     password: string;
     firstName: string;
     lastName: string;
+    status?: $Enums.UserStatus;
     createdAt?: Date | string;
     friends?: FriendCreateNestedManyWithoutUserInput;
     friendOf?: FriendCreateNestedManyWithoutFriendInput;
@@ -9440,6 +9562,7 @@ export namespace Prisma {
     password: string;
     firstName: string;
     lastName: string;
+    status?: $Enums.UserStatus;
     createdAt?: Date | string;
     friends?: FriendUncheckedCreateNestedManyWithoutUserInput;
     friendOf?: FriendUncheckedCreateNestedManyWithoutFriendInput;
@@ -9461,6 +9584,7 @@ export namespace Prisma {
     password: string;
     firstName: string;
     lastName: string;
+    status?: $Enums.UserStatus;
     createdAt?: Date | string;
     friends?: FriendCreateNestedManyWithoutUserInput;
     friendOf?: FriendCreateNestedManyWithoutFriendInput;
@@ -9475,6 +9599,7 @@ export namespace Prisma {
     password: string;
     firstName: string;
     lastName: string;
+    status?: $Enums.UserStatus;
     createdAt?: Date | string;
     friends?: FriendUncheckedCreateNestedManyWithoutUserInput;
     friendOf?: FriendUncheckedCreateNestedManyWithoutFriendInput;
@@ -9516,6 +9641,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string;
     firstName?: StringFieldUpdateOperationsInput | string;
     lastName?: StringFieldUpdateOperationsInput | string;
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
     friends?: FriendUpdateManyWithoutUserNestedInput;
     friendOf?: FriendUpdateManyWithoutFriendNestedInput;
@@ -9530,6 +9656,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string;
     firstName?: StringFieldUpdateOperationsInput | string;
     lastName?: StringFieldUpdateOperationsInput | string;
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
     friends?: FriendUncheckedUpdateManyWithoutUserNestedInput;
     friendOf?: FriendUncheckedUpdateManyWithoutFriendNestedInput;
@@ -9563,6 +9690,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string;
     firstName?: StringFieldUpdateOperationsInput | string;
     lastName?: StringFieldUpdateOperationsInput | string;
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
     friends?: FriendUpdateManyWithoutUserNestedInput;
     friendOf?: FriendUpdateManyWithoutFriendNestedInput;
@@ -9577,6 +9705,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string;
     firstName?: StringFieldUpdateOperationsInput | string;
     lastName?: StringFieldUpdateOperationsInput | string;
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
     friends?: FriendUncheckedUpdateManyWithoutUserNestedInput;
     friendOf?: FriendUncheckedUpdateManyWithoutFriendNestedInput;

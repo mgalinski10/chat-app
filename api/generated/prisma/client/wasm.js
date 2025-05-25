@@ -122,6 +122,7 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   firstName: 'firstName',
   lastName: 'lastName',
+  status: 'status',
   createdAt: 'createdAt',
 };
 
@@ -156,6 +157,12 @@ exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive',
 };
+exports.UserStatus = exports.$Enums.UserStatus = {
+  ONLINE: 'ONLINE',
+  OFFLINE: 'OFFLINE',
+  BUSY: 'BUSY',
+};
+
 exports.RequestStatus = exports.$Enums.RequestStatus = {
   PENDING: 'PENDING',
   ACCEPTED: 'ACCEPTED',
