@@ -5,13 +5,11 @@ import { useSocket } from '@/contexts/SocketContext';
 
 const StatusPage = () => {
   const socket = useSocket();
-  const [selectedStatus, setSelectedStatus] = useState<'ONLINE' | 'OFFLINE'>(
-    'ONLINE',
-  );
+  const [status, setStatus] = useState<'ONLINE' | 'OFFLINE'>('ONLINE');
 
   useEffect(() => {
-    if (socket && selectedStatus) {
-      socket.emit('status:update', selectedStatus);
+    if (socket && status) {
+      socket.emit('status:update', status);
     }
   }, [socket]);
 
@@ -19,7 +17,7 @@ const StatusPage = () => {
     const value = e.target.value.toUpperCase();
 
     if (value === 'ONLINE' || value === 'OFFLINE') {
-      setSelectedStatus(value as 'ONLINE' | 'OFFLINE');
+      setStatus(value as 'ONLINE' | 'OFFLINE');
       socket?.emit('status:update', value);
     }
   };
@@ -35,7 +33,7 @@ const StatusPage = () => {
             name="status"
             value="ONLINE"
             className="form-radio accent-blue-800"
-            checked={selectedStatus === 'ONLINE'}
+            checked={status === 'ONLINE'}
             onChange={handleStatusChange}
           />
           <span>Online</span>
@@ -47,7 +45,7 @@ const StatusPage = () => {
             name="status"
             value="OFFLINE"
             className="form-radio accent-blue-800"
-            checked={selectedStatus === 'OFFLINE'}
+            checked={status === 'OFFLINE'}
             onChange={handleStatusChange}
           />
           <span>Offline</span>
