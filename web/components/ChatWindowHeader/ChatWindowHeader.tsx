@@ -5,6 +5,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { FaEllipsisH, FaBan } from 'react-icons/fa';
 import { redirect } from 'next/navigation';
+import { showToast } from 'nextjs-toast-notify';
 
 type User = {
   id: number;
@@ -23,7 +24,7 @@ const ChatWindowHeader: React.FC<ChatWindowHeaderProps> = ({ user }) => {
 
   const handleBlock = async () => {
     try {
-      const res = await axios.post(
+      await axios.post(
         'http://localhost:5000/contacts/block',
         {
           blockedId: user.id,
@@ -36,7 +37,19 @@ const ChatWindowHeader: React.FC<ChatWindowHeaderProps> = ({ user }) => {
         },
       );
 
-      console.log('Zablokowano:', res.data);
+      showToast.success('User has been blocked successfuly!', {
+        duration: 4000,
+
+        progress: true,
+
+        position: 'top-right',
+
+        transition: 'fadeIn',
+
+        icon: '',
+
+        sound: false,
+      });
     } catch (err) {
       console.error('Błąd przy blokowaniu:', err);
     } finally {

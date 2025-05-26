@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useContacts } from '@/contexts/ContactsContext';
+import { showToast } from 'nextjs-toast-notify';
 
 type User = {
   id: number;
@@ -24,6 +25,19 @@ const BlockedItem = ({ id, firstName, lastName }: ItemProps) => {
         { blockedId: id },
         { withCredentials: true },
       );
+      showToast.success('User has been unblocked successfuly!', {
+        duration: 4000,
+
+        progress: true,
+
+        position: 'top-right',
+
+        transition: 'fadeIn',
+
+        icon: '',
+
+        sound: false,
+      });
     } catch (error) {
       console.error('Error unblocking user:', error);
     } finally {

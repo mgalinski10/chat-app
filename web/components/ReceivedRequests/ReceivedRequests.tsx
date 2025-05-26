@@ -2,6 +2,7 @@ import { useContacts } from '@/contexts/ContactsContext';
 import { IoIosInformationCircleOutline } from 'react-icons/io';
 import axios from 'axios';
 import { useUser } from '@/hooks/useUser';
+import { showToast } from 'nextjs-toast-notify';
 
 interface RequestItemProps {
   id: number;
@@ -28,7 +29,23 @@ const RequestItem: React.FC<RequestItemProps> = ({
         },
         { withCredentials: true },
       )
-      .then(() => fetchReceivedRequests())
+      .then(() => {
+        fetchReceivedRequests();
+        showToast.success("You've accepted the invitation.", {
+          duration: 4000,
+
+          progress: true,
+
+          position: 'top-right',
+
+          transition: 'fadeIn',
+
+          icon: '',
+
+          sound: false,
+        });
+      })
+
       .catch((error) => {
         console.log(error);
       });
@@ -46,6 +63,19 @@ const RequestItem: React.FC<RequestItemProps> = ({
       .then(async () => {
         await fetchReceivedRequests();
         fetchAllUsers();
+        showToast.success("You've declined the invitation.", {
+          duration: 4000,
+
+          progress: true,
+
+          position: 'top-right',
+
+          transition: 'fadeIn',
+
+          icon: '',
+
+          sound: false,
+        });
       })
       .catch((error) => {
         console.log(error);

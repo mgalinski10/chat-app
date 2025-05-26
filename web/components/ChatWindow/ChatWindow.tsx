@@ -5,6 +5,7 @@ import Spinner from '../Spinner/Spinner';
 import MessageBubble from '../MessageBubble/MessageBubble';
 import { useSocket } from '@/contexts/SocketContext';
 import ChatWindowHeader from '../ChatWindowHeader/ChatWindowHeader';
+import { IoIosInformationCircleOutline } from 'react-icons/io';
 
 interface ChatWindowProps {
   receiverId: string;
@@ -57,6 +58,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ receiverId }) => {
       console.error('Nie udało się pobrać wiadomości:', err);
     }
   };
+
   const fetchUser = async () => {
     try {
       const res = await axios.get(`http://localhost:5000/user/${receiverId}`, {
@@ -101,6 +103,12 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ receiverId }) => {
   return (
     <div className="flex flex-col h-full rounded-lg ">
       <ChatWindowHeader user={user} />
+      {messages.length === 0 && (
+        <div className="w-full flex items-center justify-center space-x-2 text-gray-600">
+          <IoIosInformationCircleOutline />
+          <span>This chat is empty — say hi!</span>
+        </div>
+      )}
       {/* TODO: HAX with styles, fix it to avoid scrren stretch in y axios */}
       <div className="flex-1 p-4 overflow-y-auto space-y-2 max-h-[calc(100vh-250px)]">
         {messages.map((msg) => (
