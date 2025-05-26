@@ -7,12 +7,12 @@ export const getMessages = async (req: Request, res: Response) => {
     // @ts-expect-error from middleware
     const senderId = req.user.userId;
     const receiverId = parseInt(req.params.userId);
-    console.debug(receiverId);
+
     if (!receiverId) {
       res.status(400).json({ error: 'Missing receiverId' });
       return;
     }
-    console.debug();
+
     const messages = await prisma.message.findMany({
       where: {
         OR: [
@@ -22,7 +22,7 @@ export const getMessages = async (req: Request, res: Response) => {
       },
       orderBy: { createdAt: 'asc' },
     });
-    console.debug();
+
     res.json(messages);
     return;
   } catch (err) {
