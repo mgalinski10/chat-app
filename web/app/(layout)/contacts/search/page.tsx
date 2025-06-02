@@ -4,6 +4,7 @@ import { useUser } from '@/hooks/useUser';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { IoIosInformationCircleOutline } from 'react-icons/io';
+import { showToast } from 'nextjs-toast-notify';
 
 const SearchFriendsPage = () => {
   const { allUsers, fetchAllUsers } = useUser();
@@ -36,6 +37,20 @@ const SearchFriendsPage = () => {
           withCredentials: true,
         },
       );
+
+      showToast.success('Request has been sent!', {
+        duration: 4000,
+
+        progress: true,
+
+        position: 'top-right',
+
+        transition: 'fadeIn',
+
+        icon: '',
+
+        sound: false,
+      });
     } catch (error) {
       console.error('Error sending request:', error);
     } finally {

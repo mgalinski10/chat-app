@@ -4,6 +4,8 @@ import axios from 'axios';
 import Spinner from '../Spinner/Spinner';
 import MessageBubble from '../MessageBubble/MessageBubble';
 import { useSocket } from '@/contexts/SocketContext';
+import ChatWindowHeader from '../ChatWindowHeader/ChatWindowHeader';
+import { IoIosInformationCircleOutline } from 'react-icons/io';
 
 interface ChatWindowProps {
   receiverId: string;
@@ -56,6 +58,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ receiverId }) => {
       console.error('Nie udało się pobrać wiadomości:', err);
     }
   };
+
   const fetchUser = async () => {
     try {
       const res = await axios.get(`http://localhost:5000/user/${receiverId}`, {
@@ -99,24 +102,13 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ receiverId }) => {
 
   return (
     <div className="flex flex-col h-full rounded-lg ">
-      <div className="flex items-center gap-4 p-4 ">
-        <img
-          src={`https://api.dicebear.com/7.x/thumbs/svg?seed=${user.id}`}
-          className="w-12 h-12 rounded-full object-cover mb-3"
-        />
-        <div className="flex flex-col">
-          <span className="font-medium text-sm">
-            {user.firstName} {user.lastName}
-          </span>
-          <span
-            className={`text-xs ${
-              user.status === 'ONLINE' ? 'text-green-600' : 'text-gray-400'
-            }`}
-          >
-            {user.status.toLowerCase()}
-          </span>
+      <ChatWindowHeader user={user} />
+      {messages.length === 0 && (
+        <div className="w-full flex items-center justify-center space-x-2 text-gray-600">
+          <IoIosInformationCircleOutline />
+          <span>This chat is empty — say hi!</span>
         </div>
-      </div>
+      )}
       {/* TODO: HAX with styles, fix it to avoid scrren stretch in y axios */}
       <div className="flex-1 p-4 overflow-y-auto space-y-2 max-h-[calc(100vh-250px)]">
         {messages.map((msg) => (
