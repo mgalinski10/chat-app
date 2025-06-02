@@ -26,7 +26,16 @@ model User {
   friendRequestsReceived FriendRequest[] @relation("ReceivedRequests")
   blockedUsers Block[]          @relation("BlockedUsers")
   blockedBy    Block[]          @relation("BlockedBy")
+  status UserStatus @default(OFFLINE)
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
   createdAt DateTime @default(now())
+}
+
+enum UserStatus {
+  ONLINE
+  OFFLINE
+  BUSY
 }
 
 model Friend {
@@ -67,4 +76,15 @@ model Block {
   createdAt  DateTime @default(now())
 
   @@unique([blockerId, blockedId])
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  text       String
+  senderId   Int
+  receiverId Int
+  createdAt  DateTime @default(now())
+
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
 }

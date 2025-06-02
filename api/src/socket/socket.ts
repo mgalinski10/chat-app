@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import { Server as HTTPServer } from 'http';
 import { testSocketHandlers } from './handlers';
 import { getAccessToken } from '../utils/getAccessToken';
+import prisma from '../utils/prisma-client';
 
 dotenv.config();
 
@@ -42,10 +43,34 @@ export const setupSocket = (server: HTTPServer) => {
     }
   });
 
-  io.on('connection', (socket) => {
+  io.on('connection', async (socket) => {
     console.log('🟢 Socket connected:', socket.id, 'User:', socket.data.user);
+    const userId = socket.data.user.userId;
+
+    socket.join(`user:${userId}`);
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { status: 'ONLINE' },
+    });
+
+    socket.on('status:update', async (newStatus: 'ONLINE' | 'OFFLINE') => {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { status: newStatus },
+      });
+
+      io.emit('user:statusUpdate', { userId, status: newStatus });
+    });
 
     testSocketHandlers(socket, io);
+
+    socket.on('disconnect', async () => {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { status: 'OFFLINE' },
+      });
+    });
   });
 
   return io;

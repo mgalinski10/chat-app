@@ -122,6 +122,7 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   firstName: 'firstName',
   lastName: 'lastName',
+  status: 'status',
   createdAt: 'createdAt',
 };
 
@@ -147,6 +148,14 @@ exports.Prisma.BlockScalarFieldEnum = {
   createdAt: 'createdAt',
 };
 
+exports.Prisma.MessageScalarFieldEnum = {
+  id: 'id',
+  text: 'text',
+  senderId: 'senderId',
+  receiverId: 'receiverId',
+  createdAt: 'createdAt',
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc',
@@ -156,6 +165,12 @@ exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive',
 };
+exports.UserStatus = exports.$Enums.UserStatus = {
+  ONLINE: 'ONLINE',
+  OFFLINE: 'OFFLINE',
+  BUSY: 'BUSY',
+};
+
 exports.RequestStatus = exports.$Enums.RequestStatus = {
   PENDING: 'PENDING',
   ACCEPTED: 'ACCEPTED',
@@ -167,6 +182,7 @@ exports.Prisma.ModelName = {
   Friend: 'Friend',
   FriendRequest: 'FriendRequest',
   Block: 'Block',
+  Message: 'Message',
 };
 
 /**

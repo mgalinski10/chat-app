@@ -79,3 +79,29 @@ export const getAllUsers = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Something went wrong' });
   }
 };
+
+export const getUserById = async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.id);
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        status: true,
+      },
+    });
+
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    res.json(user);
+  } catch (err) {
+    console.error('Error getting user:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
