@@ -12,9 +12,6 @@ export const sendContactRequest = async (req: Request, res: Response) => {
   const senderId = req.user.userId;
   const receiverId = req.body.receiverId;
 
-  console.debug(req.body.receiverId);
-
-  //   console.debug(senderId, receiverId);
   if (senderId === receiverId) {
     res.status(400).json("You can't add yourself.");
     return;
@@ -71,8 +68,7 @@ export const acceptContactRequest = async (req: Request, res: Response) => {
   // @ts-expect-error from middleware
   const receiverId = req.user.userId;
   const senderId = req.body.senderId;
-  // @ts-expect-error from middleware
-  console.debug(`Receiver: ${req.user.userId}, Sender: ${req.body.senderId}`);
+
   if (!senderId) {
     res
       .status(400)
@@ -235,7 +231,6 @@ export const getContacts = async (req: Request, res: Response) => {
 export const getSentRequests = async (req: Request, res: Response) => {
   // @ts-expect-error - from middleware
   const userId = req.user.userId;
-  console.debug(userId);
 
   try {
     const requests = await prisma.friendRequest.findMany({
