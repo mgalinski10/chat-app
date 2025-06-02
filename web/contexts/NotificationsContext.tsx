@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
+import { showToast } from 'nextjs-toast-notify';
 
 import axios from 'axios';
 
@@ -41,13 +42,27 @@ export default function NotificationsProvider({
 
       const newNotifications = response.data;
 
-      //   const hasUnread = newNotifications.some((n: Notification) => !n.read);
+      const unreadNotifications = newNotifications.some(
+        (n: Notification) => !n.read,
+      );
 
-      //   if (hasUnread) {
+      if (unreadNotifications) {
+        showToast.info('You have unread notifications', {
+          duration: 4000,
 
-      //   }
+          progress: true,
 
-      setNotifications(newNotifications);
+          position: 'top-right',
+
+          transition: 'fadeIn',
+
+          icon: '',
+
+          sound: false,
+        });
+      }
+
+      setNotifications(unreadNotifications);
     } catch (error) {
       console.error('Error fetching notifications:', error);
       setNotifications(null);
@@ -56,7 +71,7 @@ export default function NotificationsProvider({
 
   useEffect(() => {
     fetchNotifications();
-  });
+  }, []);
 
   return (
     <NotificationsContext.Provider
