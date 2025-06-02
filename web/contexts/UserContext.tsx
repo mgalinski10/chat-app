@@ -8,11 +8,14 @@ type User = {
   email: string;
   firstName: string;
   lastName: string;
+  status: 'ONLINE' | 'OFFLINE';
 };
 
 type UserContextType = {
   user: User | null;
   allUsers: User[] | null;
+  status: 'ONLINE' | 'OFFLINE';
+  setStatus: (status: 'ONLINE' | 'OFFLINE') => void;
   fetchAllUsers: () => void;
 };
 
@@ -25,6 +28,7 @@ export default function UserProvider({
 }) {
   const [user, setUser] = useState<User | null>(null);
   const [allUsers, setAllUsers] = useState<User[] | null>(null);
+  const [status, setStatus] = useState<'ONLINE' | 'OFFLINE'>('ONLINE');
 
   useEffect(() => {
     axios
@@ -45,7 +49,9 @@ export default function UserProvider({
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, allUsers, fetchAllUsers }}>
+    <UserContext.Provider
+      value={{ user, allUsers, fetchAllUsers, status, setStatus }}
+    >
       {children}
     </UserContext.Provider>
   );

@@ -13,6 +13,15 @@ if (!ACCESS_TOKEN_SECRET) {
   throw new Error('ACCESS_TOKEN_SECRET is missing');
 }
 
+async function getUserStatusFromDB(userId: number) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { status: true },
+  });
+  console.log('checking status...');
+  return user?.status || 'OFFLINE';
+}
+
 export const setupSocket = (server: HTTPServer) => {
   const io = new Server(server, {
     cors: {
@@ -53,6 +62,15 @@ export const setupSocket = (server: HTTPServer) => {
       data: { status: 'ONLINE' },
     });
 
+    const intervalId = setInterval(async () => {
+      const newStatus = await getUserStatusFromDB(socket.data.user.userId);
+
+      io.to(`user:${userId}`).emit('user:statusUpdate', {
+        userId,
+        status: newStatus,
+      });
+    }, 5000);
+
     socket.on('status:update', async (newStatus: 'ONLINE' | 'OFFLINE') => {
       await prisma.user.update({
         where: { id: userId },
@@ -63,6 +81,7 @@ export const setupSocket = (server: HTTPServer) => {
     });
 
     socket.on('disconnect', async () => {
+      clearInterval(intervalId);
       await prisma.user.update({
         where: { id: userId },
         data: { status: 'OFFLINE' },

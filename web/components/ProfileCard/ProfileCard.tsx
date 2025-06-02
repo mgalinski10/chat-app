@@ -1,14 +1,36 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useUser } from '@/hooks/useUser';
 import Spinner from '../Spinner/Spinner';
+import { useSocket } from '@/contexts/SocketContext';
 
 const ProfileCard = () => {
-  const { user } = useUser();
+  const { user, status, setStatus } = useUser();
+
+  const socket = useSocket();
+
+  useEffect(() => {
+    if (!socket || !user) return;
+
+    const handleStatusUpdate = ({
+      status,
+    }: {
+      userId: number;
+      status: 'ONLINE' | 'OFFLINE';
+    }) => {
+      setStatus(status);
+    };
+
+    socket.on('user:statusUpdate', handleStatusUpdate);
+
+    return () => {
+      socket.off('user:statusUpdate', handleStatusUpdate);
+    };
+  }, [socket, user]);
 
   if (!user) {
     return <Spinner />;
   }
-  //   Somewhere here add statuc like: active | offline | busy
+
   return (
     <div className="flex flex-col items-center justify-center p-6 bg-white rounded-md shadow-md w-full h-full">
       <img
@@ -19,9 +41,14 @@ const ProfileCard = () => {
       <h2 className="text-black text-xl font-semibold mb-1">
         {user?.firstName} {user?.lastName}
       </h2>
-      <p className="text-gray-500 text-sm uppercase tracking-wide">
-        CEO &amp; FOUNDER
-      </p>
+
+      <span
+        className={` ${
+          status === 'ONLINE' ? 'text-green-600' : 'text-gray-400'
+        }`}
+      >
+        {status.toLowerCase()}
+      </span>
     </div>
   );
 };
