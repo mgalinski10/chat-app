@@ -1,5 +1,7 @@
 'use client';
 import Link from 'next/link';
+import { hoursSince } from '@/utils/hourSince';
+import axios from 'axios';
 
 type Notification = {
   id: number;
@@ -40,8 +42,14 @@ const NotificationList: React.FC<NotificationListProps> = ({
               </p>
             </div>
           </div>
+          <div>
+            <p className=" text-gray-400 w-50 text-center">
+              {hoursSince(notification.createdAt) === 0
+                ? 'Received recently'
+                : `${hoursSince(notification.createdAt)} hours ago `}
+            </p>
+          </div>
 
-          <p className=" text-gray-400">1 hour ago</p>
           <span
             className={`${notification.read ? 'text-gray-400' : 'text-blue-700'}`}
           >
@@ -49,7 +57,22 @@ const NotificationList: React.FC<NotificationListProps> = ({
           </span>
           <div className="flex items-center gap-4">
             <Link href="/contacts/requests">
-              <button className="font-bold  bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md hover:cursor-pointer">
+              <button
+                onClick={async () => {
+                  try {
+                    axios.post(
+                      'http://localhost:5000/notifications/read',
+                      { notificationId: notification.id },
+                      {
+                        withCredentials: true,
+                      },
+                    );
+                  } catch (error) {
+                    console.error('Error read notification', error);
+                  }
+                }}
+                className="font-bold  bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md hover:cursor-pointer"
+              >
                 Check
               </button>
             </Link>

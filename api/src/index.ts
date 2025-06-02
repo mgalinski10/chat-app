@@ -8,6 +8,7 @@ import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
 import contactsRoutes from './routes/contactsRoutes';
 import messagesRoutes from './routes/messagesRoutes';
+import notificationsRoutes from './routes/notificationsRoutes';
 dotenv.config();
 
 const app = express();
@@ -29,6 +30,7 @@ app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/contacts', contactsRoutes);
 app.use('/messages', messagesRoutes);
+app.use('/notifications', notificationsRoutes);
 
 server.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
