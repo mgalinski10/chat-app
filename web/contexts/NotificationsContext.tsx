@@ -45,7 +45,7 @@ export default function NotificationsProvider({
       const unreadNotifications = newNotifications.some(
         (n: Notification) => !n.read,
       );
-
+      // TODO: Add filters by date, read/unread etc.
       if (unreadNotifications) {
         showToast.info('You have unread notifications', {
           duration: 4000,
@@ -61,8 +61,7 @@ export default function NotificationsProvider({
           sound: false,
         });
       }
-
-      setNotifications(unreadNotifications);
+      setNotifications(newNotifications);
     } catch (error) {
       console.error('Error fetching notifications:', error);
       setNotifications(null);
@@ -72,7 +71,7 @@ export default function NotificationsProvider({
   useEffect(() => {
     fetchNotifications();
   }, []);
-
+  console.log('Current notifications in context: ', notifications);
   return (
     <NotificationsContext.Provider
       value={{ fetchNotifications, notifications }}

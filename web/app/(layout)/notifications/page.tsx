@@ -6,7 +6,7 @@ import { IoIosInformationCircleOutline } from 'react-icons/io';
 
 const NotificationPage = () => {
   const { notifications } = useNotifications();
-
+  console.log(notifications);
   return (
     <Card>
       <p className="text-lg font-semibold mb-5">Notifications</p>

@@ -34,7 +34,7 @@ const ProfileCard = () => {
   return (
     <div className="flex flex-col items-center justify-center p-6 bg-white rounded-md shadow-md w-full h-full">
       <img
-        src="https://i.pravatar.cc/150?img=3"
+        src={`https://api.dicebear.com/7.x/thumbs/svg?seed=${user.id}`}
         alt="Profile"
         className="w-24 h-24 rounded-full object-cover mb-4 border-4 border-white shadow-md"
       />

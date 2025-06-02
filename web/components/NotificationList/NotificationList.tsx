@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { hoursSince } from '@/utils/hourSince';
 import axios from 'axios';
+import { useNotifications } from '@/contexts/NotificationsContext';
 
 type Notification = {
   id: number;
@@ -20,6 +21,7 @@ interface NotificationListProps {
 const NotificationList: React.FC<NotificationListProps> = ({
   notifications,
 }) => {
+  const { fetchNotifications } = useNotifications();
   return (
     <div className="flex flex-col gap-4">
       {notifications.map((notification) => (
@@ -60,13 +62,14 @@ const NotificationList: React.FC<NotificationListProps> = ({
               <button
                 onClick={async () => {
                   try {
-                    axios.post(
+                    await axios.post(
                       'http://localhost:5000/notifications/read',
                       { notificationId: notification.id },
                       {
                         withCredentials: true,
                       },
                     );
+                    fetchNotifications();
                   } catch (error) {
                     console.error('Error read notification', error);
                   }
