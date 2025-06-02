@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import { Server } from 'socket.io';
 import { Server as HTTPServer } from 'http';
-import { testSocketHandlers } from './handlers';
 import { getAccessToken } from '../utils/getAccessToken';
 import prisma from '../utils/prisma-client';
 
@@ -12,6 +11,15 @@ const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 
 if (!ACCESS_TOKEN_SECRET) {
   throw new Error('ACCESS_TOKEN_SECRET is missing');
+}
+
+async function getUserStatusFromDB(userId: number) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { status: true },
+  });
+  console.log('checking status...');
+  return user?.status || 'OFFLINE';
 }
 
 export const setupSocket = (server: HTTPServer) => {
@@ -54,6 +62,15 @@ export const setupSocket = (server: HTTPServer) => {
       data: { status: 'ONLINE' },
     });
 
+    const intervalId = setInterval(async () => {
+      const newStatus = await getUserStatusFromDB(socket.data.user.userId);
+
+      io.to(`user:${userId}`).emit('user:statusUpdate', {
+        userId,
+        status: newStatus,
+      });
+    }, 5000);
+
     socket.on('status:update', async (newStatus: 'ONLINE' | 'OFFLINE') => {
       await prisma.user.update({
         where: { id: userId },
@@ -63,9 +80,8 @@ export const setupSocket = (server: HTTPServer) => {
       io.emit('user:statusUpdate', { userId, status: newStatus });
     });
 
-    testSocketHandlers(socket, io);
-
     socket.on('disconnect', async () => {
+      clearInterval(intervalId);
       await prisma.user.update({
         where: { id: userId },
         data: { status: 'OFFLINE' },

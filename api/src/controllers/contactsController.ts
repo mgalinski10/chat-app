@@ -56,6 +56,14 @@ export const sendContactRequest = async (req: Request, res: Response) => {
       },
     });
 
+    await prisma.notification.create({
+      data: {
+        fromUserId: senderId,
+        toUserId: receiverId,
+        read: false,
+      },
+    });
+
     res.status(200).json({ message: 'Sent friend request' });
     return;
   } catch (error) {

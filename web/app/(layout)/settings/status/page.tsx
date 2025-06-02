@@ -1,15 +1,26 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSocket } from '@/contexts/SocketContext';
+import { useUser } from '@/hooks/useUser';
 
 const StatusPage = () => {
   const socket = useSocket();
-  const [status, setStatus] = useState<'ONLINE' | 'OFFLINE'>('ONLINE');
+  const { status, setStatus } = useUser();
 
   useEffect(() => {
     if (socket && status) {
       socket.emit('status:update', status);
+      const handleStatusUpdate = ({
+        status,
+      }: {
+        userId: number;
+        status: 'ONLINE' | 'OFFLINE';
+      }) => {
+        setStatus(status);
+      };
+
+      socket.on('user:statusUpdate', handleStatusUpdate);
     }
   }, [socket]);
 
