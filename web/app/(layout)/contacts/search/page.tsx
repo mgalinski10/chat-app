@@ -30,13 +30,14 @@ const SearchFriendsPage = () => {
 
   const handleAddContact = async (receiverId: number) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         'http://localhost:5000/contacts/request',
         { receiverId: receiverId },
         {
           withCredentials: true,
         },
       );
+
       showToast.success('Request has been sent!', {
         duration: 4000,
 
@@ -50,7 +51,6 @@ const SearchFriendsPage = () => {
 
         sound: false,
       });
-      console.debug(response);
     } catch (error) {
       console.error('Error sending request:', error);
     } finally {
