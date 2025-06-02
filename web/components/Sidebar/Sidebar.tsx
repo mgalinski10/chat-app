@@ -66,7 +66,7 @@ const Sidebar = () => {
         credentials: 'include',
       });
 
-      router.push('/login'); // albo '/' zależnie gdzie ma lecieć
+      router.push('/login');
     } catch (err) {
       console.error('Logout failed', err);
     }
