@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import { Server } from 'socket.io';
 import { Server as HTTPServer } from 'http';
-import { testSocketHandlers } from './handlers';
 import { getAccessToken } from '../utils/getAccessToken';
 import prisma from '../utils/prisma-client';
 
@@ -62,8 +61,6 @@ export const setupSocket = (server: HTTPServer) => {
 
       io.emit('user:statusUpdate', { userId, status: newStatus });
     });
-
-    testSocketHandlers(socket, io);
 
     socket.on('disconnect', async () => {
       await prisma.user.update({
