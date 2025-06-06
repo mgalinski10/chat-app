@@ -9,8 +9,43 @@ services:
       - '5432:5432'
     volumes:
       - chatapp_data:/var/lib/postgresql/data
+    networks:
+      - chatapp_net
 
-  # TODO Create other services such as web, api, prisma studio?, AI service for content detection?
+  backend:
+    build: ../api
+    depends_on:
+      - database
+    environment:
+      DATABASE_URL: "postgresql://postgres:password@database:5432/chatapp?schema=public"
+      ACCESS_TOKEN_SECRET: "43a520966f4e8a03987916dc95faa2afedbf6db28cbcdc23a88727183808a53ad5de4ef83c80cbaf218e82780ca410e0669a30a76b6cc5805a9f12b65c1dd19d"
+      REFRESH_TOKEN_SECRET: "8c20a35ef9af075b2e0d06e0a370263dde79e0e25828bb2c227330855012a17bca36214f158ff51b38c3ec7f549e64c9c2e177444451fc1e3eae82a1b5669e4a"
+      API_PORT: 5000
+    ports:
+      - '5000:5000' 
+    volumes:
+      - ../api:/app
+      - /app/node_modules
+    networks:
+      - chatapp_net
+    command: npm run dev 
+
+  frontend:
+    build: ../web
+    ports:
+      - '3000:3000'
+    depends_on:
+      - backend
+    volumes:
+      - ../web:/app
+      - /app/node_modules
+    networks:
+      - chatapp_net
+    command: npm run dev
 
 volumes:
   chatapp_data:
+
+networks:
+  chatapp_net:
+    driver: bridge
