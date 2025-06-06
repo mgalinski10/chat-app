@@ -15,11 +15,18 @@ This is a minimal chat application built with **Next.js** (Frontend), **Express*
 
 ### ⚙️ How to Run
 
-1. Clone the repository:
+1. ***Clone the repository:***
 
 ```bash
 git clone https://github.com/your-user/chat-app.git
+```
+2. ***Navigate to the Docker setup directory:***
+
+```bash
 cd chat-app/docker
+```
+3. ***Start all services using Docker Compose:***
+```bash 
 docker compose up --build
 ```
 
