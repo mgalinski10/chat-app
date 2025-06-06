@@ -13,7 +13,6 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
-// WARNING: removed const io = ...
 export const io = setupSocket(server);
 const PORT = process.env.API_PORT || 5000;
 
