@@ -1,5 +1,5 @@
 services:
-  database:
+  postgres:
     image: postgres:16
     environment:
       POSTGRES_USER: postgres
@@ -8,16 +8,16 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - chatapp_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - chatapp_net
 
   backend:
     build: ../api
     depends_on:
-      - database
+      - postgres
     environment:
-      DATABASE_URL: "postgresql://postgres:password@database:5432/chatapp?schema=public"
+      POSTGRES_URL: "postgresql://postgres:password@postgres:5432/chatapp?schema=public"
       ACCESS_TOKEN_SECRET: "43a520966f4e8a03987916dc95faa2afedbf6db28cbcdc23a88727183808a53ad5de4ef83c80cbaf218e82780ca410e0669a30a76b6cc5805a9f12b65c1dd19d"
       REFRESH_TOKEN_SECRET: "8c20a35ef9af075b2e0d06e0a370263dde79e0e25828bb2c227330855012a17bca36214f158ff51b38c3ec7f549e64c9c2e177444451fc1e3eae82a1b5669e4a"
       API_PORT: 5000
@@ -44,7 +44,7 @@ services:
     command: npm run dev
 
 volumes:
-  chatapp_data:
+  postgres_data:
 
 networks:
   chatapp_net:
