@@ -9,12 +9,15 @@ import userRoutes from './routes/userRoutes';
 import contactsRoutes from './routes/contactsRoutes';
 import messagesRoutes from './routes/messagesRoutes';
 import notificationsRoutes from './routes/notificationsRoutes';
+import connectMongoose from './utils/mongoose-client';
 dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
 export const io = setupSocket(server);
 const PORT = process.env.API_PORT || 5000;
+
+connectMongoose();
 
 app.use(express.json());
 app.use(
