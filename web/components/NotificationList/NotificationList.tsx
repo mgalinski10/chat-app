@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useNotifications } from '@/contexts/NotificationsContext';
 
 type Notification = {
-  id: number;
+  _id: number;
   fromUser: {
     firstName: string;
     lastName: string;
@@ -26,12 +26,12 @@ const NotificationList: React.FC<NotificationListProps> = ({
     <div className="flex flex-col gap-4">
       {notifications.map((notification) => (
         <div
-          key={notification.id}
+          key={notification._id}
           className="flex items-center justify-between p-4 rounded-xl bg-white shadow-sm"
         >
           <div className="flex items-center gap-4">
             <img
-              src={`https://api.dicebear.com/7.x/thumbs/svg?seed=${notification.id}`}
+              src={`https://api.dicebear.com/7.x/thumbs/svg?seed=${notification._id}`}
               className="w-12 h-12 rounded-full object-cover"
             />
             <div>
@@ -64,7 +64,7 @@ const NotificationList: React.FC<NotificationListProps> = ({
                   try {
                     await axios.post(
                       'http://localhost:5000/notifications/read',
-                      { notificationId: notification.id },
+                      { notificationId: notification._id },
                       {
                         withCredentials: true,
                       },

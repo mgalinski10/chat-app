@@ -6,7 +6,7 @@ import { showToast } from 'nextjs-toast-notify';
 import axios from 'axios';
 
 type Notification = {
-  id: number;
+  _id: number;
   fromUserId: number;
   toUserId: number;
   createdAt: string;
@@ -71,7 +71,6 @@ export default function NotificationsProvider({
   useEffect(() => {
     fetchNotifications();
   }, []);
-  console.log('Current notifications in context: ', notifications);
   return (
     <NotificationsContext.Provider
       value={{ fetchNotifications, notifications }}

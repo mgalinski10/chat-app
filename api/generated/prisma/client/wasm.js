@@ -156,14 +156,6 @@ exports.Prisma.MessageScalarFieldEnum = {
   createdAt: 'createdAt',
 };
 
-exports.Prisma.NotificationScalarFieldEnum = {
-  id: 'id',
-  fromUserId: 'fromUserId',
-  toUserId: 'toUserId',
-  createdAt: 'createdAt',
-  read: 'read',
-};
-
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc',
@@ -191,7 +183,6 @@ exports.Prisma.ModelName = {
   FriendRequest: 'FriendRequest',
   Block: 'Block',
   Message: 'Message',
-  Notification: 'Notification',
 };
 
 /**

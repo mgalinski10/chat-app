@@ -37,9 +37,6 @@ model User {
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
 
-  SentNotifications     Notification[] @relation("SentNotifications")
-  ReceivedNotifications Notification[] @relation("ReceivedNotifications")
-
   createdAt DateTime @default(now())
 }
 
@@ -98,16 +95,4 @@ model Message {
 
   sender     User     @relation("SentMessages", fields: [senderId], references: [id])
   receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
-}
-
-model Notification {
-  id         Int      @id @default(autoincrement())
-  fromUser   User     @relation("SentNotifications", fields: [fromUserId], references: [id])
-  fromUserId Int
-
-  toUser     User     @relation("ReceivedNotifications", fields: [toUserId], references: [id])
-  toUserId   Int
-
-  createdAt  DateTime @default(now())
-  read       Boolean  @default(false)
 }
