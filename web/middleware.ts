@@ -7,7 +7,6 @@ export function middleware(request: NextRequest) {
   if (!token) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
-  console.debug('Middleware się wywołuje');
   return NextResponse.next();
 }
 
