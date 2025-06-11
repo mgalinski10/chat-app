@@ -17,7 +17,7 @@ const RequestItem: React.FC<RequestItemProps> = ({
   lastName,
   senderId,
 }) => {
-  const { fetchReceivedRequests } = useContacts();
+  const { fetchReceivedRequests, fetchContacts } = useContacts();
   const { fetchAllUsers } = useUser();
 
   const handleAccept = async () => {
@@ -48,6 +48,9 @@ const RequestItem: React.FC<RequestItemProps> = ({
 
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        fetchContacts();
       });
   };
 

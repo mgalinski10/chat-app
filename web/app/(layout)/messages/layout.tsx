@@ -22,7 +22,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({ children }) => {
     if (!socket) return;
 
     socket.on('connect', () => {
-      console.log('🟢 Socket connected:', socket.id);
+      // console.log('🟢 Socket connected:', socket.id);
     });
 
     socket.emit('test', 'Testowa wiadomość');

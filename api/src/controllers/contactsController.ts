@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { Notification } from '../models/Notification.model';
 import prisma from '../utils/prisma-client';
 
 export enum RequestStatus {
@@ -56,12 +57,10 @@ export const sendContactRequest = async (req: Request, res: Response) => {
       },
     });
 
-    await prisma.notification.create({
-      data: {
-        fromUserId: senderId,
-        toUserId: receiverId,
-        read: false,
-      },
+    await Notification.create({
+      fromUserId: senderId,
+      toUserId: receiverId,
+      read: false,
     });
 
     res.status(200).json({ message: 'Sent friend request' });
